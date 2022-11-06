@@ -2,6 +2,8 @@ import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
     #root {
+        background-color: #fefefe;
+        
         color: #555;
         font-family: "Inter";
         font-weight: 600;
@@ -10,7 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     * {
         margin: 0;
         padding: 0;
-        
+
         color: #555;
         font-family: "Inter";
         font-weight: 600;

@@ -1,11 +1,12 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ProjectLogo } from "../../assets/images";
-import { pxToRem } from "../../utils/functions/pxToRem";
+import { pxToRem } from "../../utils/pxToRem";
 
 const Header = () => {
   return (
     <Background>
-      <Logo>
+      <Logo to="/menu/farm">
         <img src={ProjectLogo} alt="Logo" />
       </Logo>
     </Background>
@@ -15,7 +16,7 @@ const Header = () => {
 export default Header;
 
 const Background = styled.header`
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.white};
 
   position: fixed;
   top: 0;
@@ -27,18 +28,24 @@ const Background = styled.header`
   display: flex;
   align-items: center;
 
-  border-bottom: 1px solid ${({ theme }) => theme.color.grey};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey1f};
   z-index: 99;
 `;
 
-const Logo = styled.div`
+const Logo = styled(Link)`
   margin-left: calc(15% - ${pxToRem(20)}rem);
 
   display: flex;
   align-items: center;
 
+  text-decoration: none;
+
+  ${({ theme }) => theme.common.hoverEffect}
+
   h1 {
     margin-left: ${pxToRem(8)}rem;
-    font-size: ${({ theme }) => theme.fontSize.text};
+
+    color: ${({ theme }) => theme.colors.grey1f};
+    font-size: ${({ theme }) => theme.fontSizes.description};
   }
 `;

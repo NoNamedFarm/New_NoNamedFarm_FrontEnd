@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Banner from "../../components/banner";
 import Button from "../../components/button";
 import InputField from "../../components/input";
-import { pxToRem } from "../../utils/functions/pxToRem";
+import { pxToRem } from "../../utils/pxToRem";
 import { Link } from "react-router-dom";
 
 function LoginPage() {
@@ -44,24 +44,23 @@ const Wrapper = styled.form`
   h1 {
     margin-bottom: ${pxToRem(25)}rem;
 
-    font-size: ${({ theme }) => theme.fontSize.title};
+    font-size: ${({ theme }) => theme.fontSizes.title};
     ${({ theme }) => theme.common.gb}
   }
 
   span {
     margin-top: ${pxToRem(25)}rem;
 
-    font-size: ${({ theme }) => theme.fontSize.description};
+    font-size: ${({ theme }) => theme.fontSizes.description};
 
     > a {
-      background-color: ${({ theme }) => theme.color.bg3f};
-
       padding: ${pxToRem(8)}rem;
 
       text-decoration: none;
 
       border-radius: 1.5rem;
-      transition: filter 0.25s ease;
+      box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
+      border: none;
 
       ${({ theme }) => theme.common.hoverEffect}
     }

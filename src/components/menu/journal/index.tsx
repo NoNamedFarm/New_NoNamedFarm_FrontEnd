@@ -1,17 +1,21 @@
 import styled from "styled-components";
-import { pxToRem } from "../../../utils/functions/pxToRem";
+import { pxToRem } from "../../../utils/pxToRem";
 import JournalCard from "../../journalCard";
 import { Link } from "react-router-dom";
+import { Create } from "../../../assets/images";
 
 const JournalMenu = () => {
   return (
     <Background>
       <MenuWrapper>
-        <Link to="/farm">나의 농장</Link>
-        <Link to="/journal">나의 일지</Link>
+        <Link to="/menu/farm">나의 농장</Link>
+        <Link to="/menu/journal">나의 일지</Link>
       </MenuWrapper>
       <span>
-        <span>+ 일지 생성</span>
+        <span>
+          <img src={Create} alt="create farm" />
+          일지 생성
+        </span>
       </span>
       <JournalWrapper>
         <JournalCard />
@@ -39,9 +43,20 @@ const Background = styled.div`
     justify-content: flex-end;
 
     > span {
-      font-size: ${({ theme }) => theme.fontSize.description};
+      display: flex;
+      align-items: center;
+
+      color: ${({ theme }) => theme.colors.grey1f};
+      font-size: ${({ theme }) => theme.fontSizes.description};
 
       ${({ theme }) => theme.common.hoverEffect}
+
+      > img {
+        margin-right: ${pxToRem(6)}rem;
+
+        width: ${pxToRem(13.53)}rem;
+        height: ${pxToRem(13.53)}rem;
+      }
     }
   }
 `;
@@ -51,11 +66,9 @@ const MenuWrapper = styled.div`
 
   display: flex;
 
-  border-bottom: 1px solid ${({ theme }) => theme.color.grey};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grey1f};
 
   a {
-    background-color: transparent;
-
     width: ${pxToRem(136)}rem;
     height: ${pxToRem(48)}rem;
 
@@ -63,10 +76,11 @@ const MenuWrapper = styled.div`
     justify-content: center;
     align-items: center;
 
-    font-size: ${({ theme }) => theme.fontSize.subText};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
     text-decoration: none;
 
     border: none;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.grey1f};
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     transition: color 0.25s ease, background-color 0.25s ease;
@@ -77,10 +91,10 @@ const MenuWrapper = styled.div`
     }
 
     :nth-child(2) {
-      color: ${({ theme }) => theme.color.green};
+      color: ${({ theme }) => theme.colors.green};
 
-      border: 1px solid ${({ theme }) => theme.color.grey};
-      border-bottom: 1px solid #fff;
+      border: 1px solid ${({ theme }) => theme.colors.grey1f};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.white};
     }
   }
 `;

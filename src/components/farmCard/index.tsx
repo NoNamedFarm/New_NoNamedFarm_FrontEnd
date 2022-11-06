@@ -1,10 +1,13 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Close } from "../../assets/images";
-import { pxToRem } from "../../utils/functions/pxToRem";
+import { pxToRem } from "../../utils/pxToRem";
 
 const FarmCard = () => {
+  const id = 1;
+
   return (
-    <Background>
+    <Background to={`/farm/:${id}`}>
       <Wrapper>
         <h1>농장 이름</h1>
         <div>
@@ -26,13 +29,11 @@ const FarmCard = () => {
 
 export default FarmCard;
 
-const Background = styled.div`
+const Background = styled(Link)`
   @media screen and (max-width: 1260px) {
     margin-right: 1%;
     width: 44.75%;
   }
-
-  transform: translateY(0);
 
   padding: calc(0.5rem + 1vh);
   margin-bottom: ${pxToRem(25)}rem;
@@ -43,15 +44,16 @@ const Background = styled.div`
   display: inline-flex;
   flex-direction: column;
 
-  border-radius: 1.5rem;
-  box-shadow: 0 0 0.5rem ${({ theme }) => theme.color.grey};
+  text-decoration: none;
 
+  border-radius: 1.5rem;
+  box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 
   :hover {
     transform: translateY(-0.5rem);
-    box-shadow: 0 0 0.5rem ${({ theme }) => theme.color.lightGrey};
+    box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey1f};
   }
 `;
 
@@ -64,7 +66,7 @@ const Wrapper = styled.div`
     padding-bottom: 0.625vh;
     margin-bottom: 1.25vh;
 
-    border-bottom: 0.1px solid ${({ theme }) => theme.color.grey};
+    border-bottom: 0.1px solid ${({ theme }) => theme.colors.grey1f};
   }
 
   > h1 {
@@ -87,7 +89,6 @@ const Wrapper = styled.div`
     width: 1.25vh;
     height: 1.25vh;
 
-    transition: filter 0.25s ease;
     filter: grayscale(1);
 
     ${({ theme }) => theme.common.hoverEffectRed}
@@ -106,7 +107,6 @@ const Wrapper = styled.div`
 
   span,
   li {
-    color: ${({ theme }) => theme.color.darkGrey};
     font-size: 1.75vh;
   }
 `;

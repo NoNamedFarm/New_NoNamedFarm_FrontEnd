@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { pxToRem } from "../../utils/functions/pxToRem";
+import { pxToRem } from "../../utils/pxToRem";
 
 interface ButtonProps {
   type: "normal" | "small";
@@ -18,7 +18,7 @@ const Button = ({ type, label }: ButtonProps) => {
 export default Button;
 
 const NormalButton = styled.button`
-  background-color: ${({ theme }) => theme.color.bg3f};
+  background-color: ${({ theme }) => theme.colors.green};
 
   padding: ${pxToRem(25)}rem;
 
@@ -30,31 +30,32 @@ const NormalButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  font-size: ${({ theme }) => theme.fontSize.subText};
+  font-size: ${({ theme }) => theme.fontSizes.subText};
 
   border-radius: 1.5rem;
   border: none;
 
-  transition: filter 0.25s ease;
   ${({ theme }) => theme.common.hoverEffect}
 `;
 
 const SmallButton = styled.button`
-  background-color: ${({ theme }) => theme.color.bg3f};
+  background-color: ${({ theme }) => theme.colors.green};
 
-  padding: ${pxToRem(16)}rem;
+  padding: ${pxToRem(8)}rem;
+  padding-left: ${pxToRem(16)}rem;
+  padding-right: ${pxToRem(16)}rem;
 
-  height: ${pxToRem(40)}rem;
+  width: ${pxToRem(139)}rem;
+  height: ${pxToRem(64)}rem;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  font-size: ${({ theme }) => theme.fontSize.description};
+  font-size: ${({ theme }) => theme.fontSizes.description};
 
   border-radius: 1.5rem;
   border: none;
 
-  transition: filter 0.25s ease;
   ${({ theme }) => theme.common.hoverEffect}
 `;

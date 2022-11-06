@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Header from "../../../components/header";
 import JournalMenu from "../../../components/menu/journal";
-import { pxToRem } from "../../../utils/functions/pxToRem";
+import { pxToRem } from "../../../utils/pxToRem";
 
 function JournalMainPage() {
   return (
@@ -59,19 +59,19 @@ const TitleWrapper = styled.div`
 
     display: inline-flex;
 
-    font-size: ${({ theme }) => theme.fontSize.title};
+    font-size: ${({ theme }) => theme.fontSizes.title};
 
     ${({ theme }) => theme.common.gb};
   }
 
   span {
-    color: ${({ theme }) => theme.color.grey};
-    font-size: ${({ theme }) => theme.fontSize.subText};
+    color: ${({ theme }) => theme.colors.grey};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
   }
 
   strong {
-    color: ${({ theme }) => theme.color.darkGrey};
-    font-size: ${({ theme }) => theme.fontSize.subText};
+    color: ${({ theme }) => theme.colors.darkGrey};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
   }
 
   > div {

@@ -1,4 +1,4 @@
-const fontSize = {
+const fontSizes = {
   title: "4.5rem",
   subTitle: "3.5rem",
   heading: "3rem",
@@ -9,16 +9,18 @@ const fontSize = {
   subDescription: "0.75rem",
 };
 
-const color = {
-  green: "#5BC179",
-  black: "#555",
+const colors = {
+  green: "#3fc266",
+  greenGradient: "#5bc179",
+  black: "#565656",
   white: "#fefefe",
-  darkGrey: "#666",
-  grey: "#aaa",
-  lightGrey: "#ccc",
+  grey1f: "#a7a7a7",
+  grey2f: "#909090",
+  grey3f: "#787579",
   temperature: "#ef7777",
   humidity: "#7791ef",
   error: "#bf4646",
+  translucent: "rgba(0, 0, 0, 0.25)",
 };
 
 const common = {
@@ -27,14 +29,14 @@ const common = {
   nbg: 'font-family: "NBG";',
   ellipsis: "text-overflow: ellipsis; white-space: nowrap; overflow: hidden;",
   hoverEffect:
-    "cursor: pointer; :hover { filter: brightness(125%) drop-shadow(0 0 0.5rem rgba(255, 255, 255, 0.5)); }",
+    "transition: filter 0.25s ease; cursor: pointer; :hover { filter: brightness(125%) drop-shadow(0 0 0.5rem rgba(255, 255, 255, 0.5)); }",
   hoverEffectRed:
-    "cursor: pointer; :hover { filter: grayscale(0) drop-shadow(0 0 0.5rem #ff0000); }",
+    "transition: filter 0.25s ease; cursor: pointer; :hover { filter: grayscale(0) drop-shadow(0 0 0.5rem #ff0000); }",
 };
 
 const theme = {
-  fontSize,
-  color,
+  fontSizes,
+  colors,
   common,
 };
 

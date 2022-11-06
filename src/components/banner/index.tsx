@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { BannerImage } from "../../assets/images";
-import { pxToRem } from "../../utils/functions/pxToRem";
+import { pxToRem } from "../../utils/pxToRem";
 
 const Banner = () => {
   return (
@@ -43,16 +43,16 @@ const Wrapper = styled.div`
   h2 {
     ${({ theme }) => theme.common.gb};
 
-    filter: drop-shadow(0 0 0.5rem ${({ theme }) => theme.color.black});
+    filter: drop-shadow(0 0 0.5rem ${({ theme }) => theme.colors.black});
   }
 
   h1 {
-    font-size: ${({ theme }) => theme.fontSize.title};
+    font-size: ${({ theme }) => theme.fontSizes.title};
   }
 
   h2 {
     margin-bottom: ${pxToRem(25)}rem;
 
-    font-size: ${({ theme }) => theme.fontSize.subHeading};
+    font-size: ${({ theme }) => theme.fontSizes.subHeading};
   }
 `;
