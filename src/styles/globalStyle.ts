@@ -9,6 +9,10 @@ export const GlobalStyle = createGlobalStyle`
         font-weight: 600;
     }
 
+    html {
+        overflow: overlay;
+    }
+
     * {
         margin: 0;
         padding: 0;

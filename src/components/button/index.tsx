@@ -8,22 +8,33 @@ interface ButtonProps {
 
 const Button = ({ type, label }: ButtonProps) => {
   return (
-    <>
+    <General>
       {type === "normal" && <NormalButton type="submit">{label}</NormalButton>}
       {type === "small" && <SmallButton type="submit">{label}</SmallButton>}
-    </>
+    </General>
   );
 };
 
 export default Button;
 
+const General = styled.div`
+  > button {
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
 const NormalButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.green};
+  @media screen and (min-width: 800px) {
+    max-width: calc(50vw - ${pxToRem(50)}rem);
+  }
+
+  background-color: ${({ theme }) => theme.colors.greenGradient};
 
   padding: ${pxToRem(25)}rem;
 
   width: ${pxToRem(512)}rem;
-  max-width: calc(50vw - ${pxToRem(50)}rem);
+  max-width: calc(100vw - ${pxToRem(50)}rem);
+  min-width: 10rem;
   height: ${pxToRem(64)}rem;
 
   display: flex;
@@ -39,7 +50,7 @@ const NormalButton = styled.button`
 `;
 
 const SmallButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.green};
+  background-color: ${({ theme }) => theme.colors.greenGradient};
 
   padding: ${pxToRem(8)}rem;
   padding-left: ${pxToRem(16)}rem;

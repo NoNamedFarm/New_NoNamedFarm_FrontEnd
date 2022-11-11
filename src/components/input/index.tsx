@@ -53,12 +53,11 @@ const General = styled.div`
   }
   input,
   button {
-    padding-left: ${pxToRem(8)}rem;
-    padding-right: ${pxToRem(8)}rem;
-
-    border-radius: 1.5rem;
-    box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
-    border: none;
+    ${({ theme }) => theme.common.boxShadow}
+  }
+  input {
+    padding-left: ${pxToRem(16)}rem;
+    padding-right: ${pxToRem(16)}rem;
   }
 `;
 
@@ -71,8 +70,6 @@ const CheckboxWrapper = styled.div`
   align-items: center;
 
   input {
-    transform: translateY(0.1rem);
-
     margin-right: ${pxToRem(8)}rem;
 
     width: ${({ theme }) => theme.fontSizes.description};
@@ -83,6 +80,8 @@ const CheckboxWrapper = styled.div`
 const OverlayWrapper = styled.div`
   margin-bottom: ${pxToRem(25)}rem;
 
+  min-width: 10rem;
+
   display: flex;
   flex-direction: column;
 
@@ -91,26 +90,37 @@ const OverlayWrapper = styled.div`
   }
 
   > div {
+    @media screen and (min-width: 800px) {
+      max-width: calc(50vw - ${pxToRem(50)}rem);
+    }
+
     width: ${pxToRem(512)}rem;
-    max-width: calc(50vw - ${pxToRem(50)}rem);
+    max-width: calc(100vw - ${pxToRem(50)}rem);
 
     display: flex;
     justify-content: space-between;
   }
 
   input {
-    width: ${pxToRem(429)}rem;
+    width: 77.5%;
+    min-width: 7rem;
     height: ${pxToRem(64)}rem;
   }
 
   button {
-    margin-left: ${pxToRem(8)}rem;
+    background-color: ${({ theme }) => theme.colors.greenGradient};
 
-    width: ${pxToRem(139)}rem;
+    margin-left: 2.5%;
+
+    width: 20%;
     max-width: calc(50vw - ${pxToRem(50)}rem);
+    min-width: 3rem;
     height: ${pxToRem(64)}rem;
 
-    ${({ theme }) => theme.common.hoverEffect}
+    color: ${({ theme }) => theme.colors.white};
+    word-break: keep-all;
+
+    ${({ theme }) => theme.common.hoverEffect};
   }
 `;
 
@@ -125,8 +135,13 @@ const InputWrapper = styled.div`
   }
 
   input {
+    @media screen and (min-width: 800px) {
+      max-width: calc(50vw - ${pxToRem(50)}rem);
+    }
+
     width: ${pxToRem(512)}rem;
-    max-width: calc(50vw - ${pxToRem(50)}rem);
+    max-width: calc(100vw - ${pxToRem(50)}rem);
+    min-width: 10rem;
     height: ${pxToRem(64)}rem;
   }
 `;

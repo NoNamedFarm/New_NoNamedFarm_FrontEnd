@@ -5,7 +5,7 @@ import InputField from "../../components/input";
 import { pxToRem } from "../../utils/pxToRem";
 import { Link } from "react-router-dom";
 
-function SignUpPage() {
+function RegisterPage() {
   return (
     <Background>
       <Banner />
@@ -31,16 +31,40 @@ function SignUpPage() {
   );
 }
 
-export default SignUpPage;
+export default RegisterPage;
 
 const Background = styled.div`
+  @media screen and (max-width: 800px) {
+    h1,
+    span {
+      text-align: center;
+    }
+  }
+
   display: flex;
 `;
 
 const Wrapper = styled.form`
+  @media screen and (max-width: 800px) {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+
+    > form {
+      > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
   padding: ${pxToRem(25)}rem;
 
   width: 50%;
+  min-height: 50rem;
 
   display: flex;
   flex-direction: column;
@@ -60,15 +84,13 @@ const Wrapper = styled.form`
     font-size: ${({ theme }) => theme.fontSizes.description};
 
     > a {
-      padding: ${pxToRem(8)}rem;
-
       text-decoration: none;
 
-      border-radius: 1.5rem;
-      box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
-      border: none;
+      transition: color 0.25s ease;
 
-      ${({ theme }) => theme.common.hoverEffect}
+      :hover {
+        color: ${({ theme }) => theme.colors.grey2f};
+      }
     }
   }
 `;

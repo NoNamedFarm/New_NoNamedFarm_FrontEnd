@@ -7,7 +7,7 @@ const FarmCard = () => {
   const id = 1;
 
   return (
-    <Background to={`/farm/:${id}`}>
+    <Background to={`/farm/${id}`}>
       <Wrapper>
         <h1>농장 이름</h1>
         <div>
@@ -31,23 +31,26 @@ export default FarmCard;
 
 const Background = styled(Link)`
   @media screen and (max-width: 1260px) {
-    margin-right: 1%;
-    width: 44.75%;
+    margin-right: 2.5%;
+    width: 45.8%;
+  }
+  @media screen and (max-width: 640px) {
+    width: 100%;
   }
 
   padding: calc(0.5rem + 1vh);
-  margin-bottom: ${pxToRem(25)}rem;
-  margin-right: 2%;
+  margin-bottom: 2.5%;
+  margin-right: 2.5%;
 
-  width: 28.25%;
+  width: 29.8%;
 
   display: inline-flex;
   flex-direction: column;
 
   text-decoration: none;
 
-  border-radius: 1.5rem;
-  box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
+  ${({ theme }) => theme.common.boxShadow}
+
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 
@@ -72,7 +75,7 @@ const Wrapper = styled.div`
   > h1 {
     margin-right: ${pxToRem(16)}rem;
 
-    font-size: 4.2vh;
+    font-size: 4.65vh;
     ${({ theme }) => theme.common.gb};
     word-break: keep-all;
   }
@@ -101,12 +104,14 @@ const Wrapper = styled.div`
     > li {
       width: 50%;
 
+      display: flex;
+
       list-style-position: inside;
     }
   }
 
   span,
   li {
-    font-size: 1.75vh;
+    font-size: 2vh;
   }
 `;

@@ -1,35 +1,15 @@
 import styled from "styled-components";
 import { BannerImage } from "../../assets/images";
-import { pxToRem } from "../../utils/pxToRem";
 
 const Banner = () => {
-  return (
-    <Wrapper>
-      <h1>살려야한다</h1>
-      <h2>NoNamed</h2>
-    </Wrapper>
-  );
+  return <Background src={BannerImage} alt="banner image" />;
 };
 export default Banner;
 
-const Wrapper = styled.div`
-  ::before {
-    background-image: url(${BannerImage});
-    background-size: cover;
-    background-repeat: no-repeat;
-
-    position: fixed;
-
-    width: 50%;
-    height: 100vh;
-
-    content: "";
-    filter: brightness(75%) blur(0.1rem);
+const Background = styled.img`
+  @media screen and (max-width: 800px) {
+    display: none;
   }
-
-  padding: ${pxToRem(25)}rem;
-  padding-left: 5vw;
-  padding-right: 5vw;
 
   width: 50%;
   height: 100vh;
@@ -39,20 +19,5 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  h1,
-  h2 {
-    ${({ theme }) => theme.common.gb};
-
-    filter: drop-shadow(0 0 0.5rem ${({ theme }) => theme.colors.black});
-  }
-
-  h1 {
-    font-size: ${({ theme }) => theme.fontSizes.title};
-  }
-
-  h2 {
-    margin-bottom: ${pxToRem(25)}rem;
-
-    font-size: ${({ theme }) => theme.fontSizes.subHeading};
-  }
+  object-fit: cover;
 `;

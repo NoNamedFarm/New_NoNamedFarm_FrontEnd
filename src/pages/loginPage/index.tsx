@@ -32,9 +32,18 @@ const Background = styled.div`
 `;
 
 const Wrapper = styled.form`
+  @media screen and (max-width: 800px) {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+  }
+
   padding: ${pxToRem(25)}rem;
 
   width: 50%;
+  min-height: 50rem;
 
   display: flex;
   flex-direction: column;
@@ -54,15 +63,13 @@ const Wrapper = styled.form`
     font-size: ${({ theme }) => theme.fontSizes.description};
 
     > a {
-      padding: ${pxToRem(8)}rem;
-
       text-decoration: none;
 
-      border-radius: 1.5rem;
-      box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
-      border: none;
+      transition: color 0.25s ease;
 
-      ${({ theme }) => theme.common.hoverEffect}
+      :hover {
+        color: ${({ theme }) => theme.colors.grey2f};
+      }
     }
   }
 `;

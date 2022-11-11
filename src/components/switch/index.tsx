@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { pxToRem } from "../../utils/pxToRem";
 
 interface SwitchProps {
   label: string;
@@ -20,14 +21,19 @@ const Switch = ({ label, id }: SwitchProps) => {
 export default Switch;
 
 const Background = styled.div`
-  height: 2.65rem;
+  margin-right: ${pxToRem(25)}rem;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
+  > span {
+    color: ${({ theme }) => theme.colors.grey1f};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
+  }
+
   input:checked + label button {
-    transform: translateX(1.05rem) translateY(-0.1vh);
+    transform: translateX(1.5rem) translateY(-0.1vh);
   }
 
   input:checked + label {
@@ -43,8 +49,8 @@ const Background = styled.div`
 
     margin-left: 0.5rem;
 
-    width: 2rem;
-    height: 1rem;
+    width: 3rem;
+    height: 1.5rem;
 
     border: 1px solid ${({ theme }) => theme.colors.grey1f};
     border-radius: 1.5rem;
@@ -58,10 +64,10 @@ const Background = styled.div`
 
     position: absolute;
 
-    transform: translateX(-0.05rem) translateY(-0.1vh);
+    transform: translateX(-0.1rem) translateY(-0.1vh);
 
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
 
     border: 1px solid ${({ theme }) => theme.colors.grey1f};
     border-radius: 50%;

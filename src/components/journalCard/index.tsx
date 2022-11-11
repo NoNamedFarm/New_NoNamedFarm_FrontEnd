@@ -1,11 +1,14 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Close } from "../../assets/images";
 import { pxToRem } from "../../utils/pxToRem";
 
 const JournalCard = () => {
+  const Date = "2022-11-04";
+
   return (
-    <Background>
-      <h1>2022-11-04</h1>
+    <Background to={`/journal/${Date}`}>
+      <h1>{Date}</h1>
       <img src={Close} alt="close" />
     </Background>
   );
@@ -13,7 +16,7 @@ const JournalCard = () => {
 
 export default JournalCard;
 
-const Background = styled.div`
+const Background = styled(Link)`
   padding: calc(0.5rem + 1vh);
   margin-bottom: ${pxToRem(25)}rem;
 
@@ -23,8 +26,10 @@ const Background = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  border-radius: 1.5rem;
-  box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.grey2f};
+  text-decoration: none;
+
+  ${({ theme }) => theme.common.boxShadow}
+
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 
@@ -34,7 +39,7 @@ const Background = styled.div`
   }
 
   > h1 {
-    font-size: ${({ theme }) => theme.fontSizes.subText};
+    font-size: 2.375vh;
   }
 
   > img {
