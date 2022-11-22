@@ -1,44 +1,92 @@
+import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 import { About } from "../../assets/constants/about";
-import { Background } from "../../assets/images";
+import { BackgroundImage, LeftArrow, RightArrow } from "../../assets/images";
 import Header from "../../components/header";
 import InfoCard from "../../components/infoCard";
 import { pxToRem } from "../../utils/pxToRem";
 
 function MainPage() {
+  const [index, setIndex] = useState<number>(0);
+
+  const isDesktop = useMediaQuery({ query: "(min-width: 1728px)" });
+  const isCompatible = useMediaQuery({ query: "(min-width: 640px)" });
+
+  const prevIndex = () => {
+    if (isDesktop) {
+      if (index - 2 < 0) setIndex(4);
+      else setIndex(index - 2);
+    } else {
+      if (index - 1 < 0) setIndex(5);
+      else setIndex(index - 1);
+    }
+  };
+  const nextIndex = () => {
+    if (isDesktop) {
+      if (index + 2 > 5) setIndex(0);
+      else setIndex(index + 2);
+    } else {
+      if (index + 1 > 5) setIndex(0);
+      else setIndex(index + 1);
+    }
+  };
+
   return (
-    <Image>
+    <Background>
       <Header />
       <Wrapper>
-        <div>
-          <Title>
-            <h1>NoNamed</h1>
-            <p>{About}</p>
-          </Title>
-          <InfoCard />
-        </div>
+        <Title>
+          <h1>NoNamed</h1>
+          <p>{About}</p>
+        </Title>
+        {isCompatible && (
+          <CardWrapper>
+            <img src={LeftArrow} alt="move left" onClick={() => prevIndex()} />
+            <InfoCard index={index} />
+            {isDesktop && <InfoCard index={index + 1} />}
+            <img
+              src={RightArrow}
+              alt="move right"
+              onClick={() => nextIndex()}
+            />
+          </CardWrapper>
+        )}
       </Wrapper>
-    </Image>
+    </Background>
   );
 }
 
 export default MainPage;
 
-const Image = styled.div`
+const Background = styled.div`
   position: fixed;
 
-  background: url(${Background}) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
+  background: linear-gradient(
+      181.4deg,
+      #8cd5a1 1.18%,
+      rgba(255, 255, 255, 0) 65.99%
+    ),
+    url(${BackgroundImage}) no-repeat center center fixed;
   background-size: cover;
 
   width: 100vw;
   height: 100vh;
+
+  > header {
+    background-color: transparent;
+
+    position: relative;
+
+    border-bottom: none;
+
+    a {
+      color: ${({ theme }) => theme.colors.white};
+    }
+  }
 `;
 
 const Wrapper = styled.div`
-  padding-top: ${pxToRem(80)}rem;
   margin-bottom: ${pxToRem(50)}rem;
   margin-left: 20%;
   margin-right: 20%;
@@ -47,33 +95,65 @@ const Wrapper = styled.div`
   height: auto;
   min-height: calc(100vh - 6rem);
 
+  display: flex;
+  align-items: center;
+
   @media screen and (max-width: 1260px) {
     display: flex;
     flex-direction: column;
   }
-
-  display: flex;
-  justify-content: space-between;
 `;
 
 const Title = styled.div`
   @media screen and (max-width: 1260px) {
-    > h1 {
-      margin-top: ${pxToRem(50)}rem;
+    margin-top: ${pxToRem(50)}rem;
+    margin-bottom: ${pxToRem(50)}rem;
+
+    width: 100%;
+  }
+
+  > h1 {
+    margin-bottom: ${pxToRem(16)}rem;
+
+    font-size: ${({ theme }) => theme.fontSizes.subTitle};
+  }
+
+  > p {
+    color: ${({ theme }) => theme.colors.grey3f};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
+  }
+`;
+
+const CardWrapper = styled.div`
+  > div + div {
+    margin-left: ${pxToRem(25)}rem;
+  }
+
+  @media screen and (max-width: 1260px) {
+    width: calc(100% + ${pxToRem(140)}rem);
+
+    > div {
+      width: 100%;
+      height: 100%;
     }
   }
-  > h1 {
-    padding-bottom: ${pxToRem(16)}rem;
 
-    font-size: ${({ theme }) => theme.fontSizes.title};
-  }
-  > p {
-    padding-top: ${pxToRem(25)}rem;
-    margin-bottom: ${pxToRem(25)}rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    color: ${({ theme }) => theme.colors.grey1f};
-    font-size: ${({ theme }) => theme.fontSizes.subText};
+  > img {
+    position: relative;
 
-    border-top: 1px solid ${({ theme }) => theme.colors.grey1f};
+    z-index: 1;
+
+    ${({ theme }) => theme.common.hoverEffect}
+
+    :first-of-type {
+      transform: translateX(2.25rem);
+    }
+    :last-of-type {
+      transform: translateX(-2.25rem);
+    }
   }
 `;

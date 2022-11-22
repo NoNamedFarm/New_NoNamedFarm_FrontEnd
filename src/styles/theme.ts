@@ -4,7 +4,7 @@ const fontSizes = {
   heading: "3rem",
   subHeading: "2.5rem",
   text: "2rem",
-  subText: "1.375rem",
+  subText: "1.4rem",
   description: "1rem",
   subDescription: "0.75rem",
 };

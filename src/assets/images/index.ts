@@ -10,7 +10,9 @@ export { default as Edit } from "./edit.png";
 export { default as Calendar } from "./calendar.png";
 export { default as Return } from "./return.png";
 export { default as Save } from "./save.png";
-export { default as Background } from "./background.png";
+export { default as BackgroundImage } from "./backgroundImage.png";
+export { default as LeftArrow } from "./leftArrow.png";
+export { default as RightArrow } from "./rightArrow.png";
 
 export const InfoCardIcons: string[] = [
   Card_1,

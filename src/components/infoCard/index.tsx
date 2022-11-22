@@ -6,11 +6,15 @@ import {
 import { InfoCardIcons } from "../../assets/images";
 import { pxToRem } from "../../utils/pxToRem";
 
-const InfoCard = () => {
+interface InfoCardProps {
+  index: number;
+}
+
+const InfoCard = ({ index }: InfoCardProps) => {
   return (
-    <Wrapper>
-      <img src={InfoCardIcons[0]} alt={InfoCardIconsAlt[0]} />
-      <p>{InfoCardContents[0]}</p>
+    <Wrapper key={index}>
+      <img src={InfoCardIcons[index]} alt={InfoCardIconsAlt[index]} />
+      <p>{InfoCardContents[index]}</p>
     </Wrapper>
   );
 };
@@ -43,4 +47,15 @@ const Wrapper = styled.div`
     word-break: keep-all;
     text-align: center;
   }
+
+  @keyframes Flash {
+    from {
+      filter: brightness(300%);
+    }
+    to {
+      filter: brightness(100%);
+    }
+  }
+
+  animation: Flash 0.25s ease;
 `;
