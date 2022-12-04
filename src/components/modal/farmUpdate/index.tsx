@@ -64,6 +64,9 @@ const FarmUpdateModal = () => {
     if (validateForm()) {
       const response = await farmUpdate(inputState);
       if (response === true) window.location.reload();
+      else if (response === 403) {
+        alert("권한이 없습니다.");
+      }
     }
   };
 

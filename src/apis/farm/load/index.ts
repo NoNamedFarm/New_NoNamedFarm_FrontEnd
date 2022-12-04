@@ -20,7 +20,7 @@ export const farmLoad = async ({
     .catch(async (error) => {
       if (error.response.status === 401)
         if (await userRefresh())
-          farmLoad({
+          return farmLoad({
             farmId: farmId,
           });
       return false;

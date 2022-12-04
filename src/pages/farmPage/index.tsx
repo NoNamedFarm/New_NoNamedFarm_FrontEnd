@@ -1,4 +1,5 @@
 import moment from "moment";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -24,8 +25,7 @@ function FarmPage() {
       const now = moment(
         document.getElementsByClassName(
           "react-calendar__navigation__label__labelText"
-        )[0].innerHTML,
-        "YYYY년 MM월"
+        )[0].innerHTML
       ).toDate();
 
       const year: number = now.getFullYear();
@@ -43,6 +43,27 @@ function FarmPage() {
       setFarmState(data);
     }
   };
+
+  useEffect(() => {
+    setFarmState({
+      id: 0,
+      farmName: "",
+      farmCrop: "",
+      createdDate: "",
+      temperature: 0,
+      airHumidity: 0,
+      soilHumidity: 0,
+      isWater: 0,
+      isLight: 0,
+      lastCycleDate: 0,
+      waterCycleResponses: [],
+      lightCycleResponses: [],
+      year: 0,
+      month: 0,
+    });
+
+    fetchData();
+  }, []);
 
   return (
     <>

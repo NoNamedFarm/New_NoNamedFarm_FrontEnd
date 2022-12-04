@@ -8,7 +8,7 @@ export const farmUpdate = async ({
   farmId,
   farmName,
   farmCrop,
-}: FarmUpdateRequestType): Promise<boolean> =>
+}: FarmUpdateRequestType): Promise<boolean | number> =>
   await axios
     .put<FarmCreateResponseType>(
       `${process.env.REACT_APP_BASE_URL}/farm/${farmId}`,
@@ -32,5 +32,5 @@ export const farmUpdate = async ({
             farmName: farmName,
             farmCrop: farmCrop,
           });
-      return false;
+      return error.response.status;
     });

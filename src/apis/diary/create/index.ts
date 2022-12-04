@@ -7,7 +7,7 @@ import { userRefresh } from "../../user/refresh";
 export const diaryCreate = async ({
   date,
   content,
-}: DiaryCreateRequestType): Promise<boolean> =>
+}: DiaryCreateRequestType): Promise<boolean | number> =>
   await axios
     .post<DiaryCreateResponseType>(
       `${process.env.REACT_APP_BASE_URL}/diary`,
@@ -20,7 +20,7 @@ export const diaryCreate = async ({
       }
     )
     .then(() => {
-      alert("성공적으로 일지 저장이 완료되었습니다.");
+      alert("성공적으로 일지 생성이 완료되었습니다.");
       return true;
     })
     .catch(async (error) => {
@@ -30,5 +30,5 @@ export const diaryCreate = async ({
             date: date,
             content: content,
           });
-      return false;
+      return error.response.status;
     });

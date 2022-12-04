@@ -148,7 +148,7 @@ function RegisterPage() {
             }}
             duplicateCheckState={duplicateCheck}
             duplicateCheck={async () => {
-              const data: boolean | string = await userCheck(
+              const data: boolean | number = await userCheck(
                 registerState.userId
               );
               let temp = Object.assign({}, warning);
@@ -157,7 +157,7 @@ function RegisterPage() {
                 setDuplicateCheck(data);
                 temp.userId = "";
                 setWarning(temp);
-              } else {
+              } else if (data === 409) {
                 temp.userId = "이미 사용중인 아이디입니다.";
                 setWarning(temp);
               }

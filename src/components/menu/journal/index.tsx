@@ -46,7 +46,6 @@ const JournalMenu = () => {
         diaryListState.diaryResponses.map((v) => (
           <JournalCard key={v.id} journalId={v.id} date={v.date} />
         ))}
-      <JournalCard journalId={1} date="2022-12-2" />
     </JournalWrapper>
   );
 };

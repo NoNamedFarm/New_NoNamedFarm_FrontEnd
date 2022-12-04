@@ -1,4 +1,4 @@
-export type DiaryCreateRequestType = {
+export type DiaryUpdateRequestType = {
   id?: number;
   date: string;
   content: string;

@@ -1,67 +1,171 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { diaryCreate } from "../../apis/diary/create";
+import { diaryLoad } from "../../apis/diary/load";
+import { diaryUpdate } from "../../apis/diary/update";
 import { Calendar, Edit, GrayClose, Save } from "../../assets/images";
 import { DiaryCreateRequestType } from "../../assets/types/diary/create/request";
+import { DiaryLoadResponseType } from "../../assets/types/diary/load/response";
+import { DiaryUpdateRequestType } from "../../assets/types/diary/update/request";
+import { diaryStateAtom, diaryStateAtomType } from "../../atoms/diaryState";
 import { pxToRem } from "../../utils/pxToRem";
 
-interface JournalPageProps {
-  openType?: string;
-}
+function JournalPage() {
+  const [diaryState, setDiaryState] =
+    useRecoilState<diaryStateAtomType>(diaryStateAtom);
 
-function JournalPage({ openType }: JournalPageProps) {
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  const textInputRef = useRef<HTMLTextAreaElement>(null);
+
   const [editState, setEditState] = useState<boolean>(true);
-
-  const params = useParams();
-  const date = params.date;
-
   const [inputState, setInputState] = useState<DiaryCreateRequestType>({
-    date: date!,
+    id: 0,
+    date: "",
     content: "",
   });
 
+  const location = useLocation();
+  const params = location.pathname.includes("read")
+    ? location.pathname.replace("/journal/read/", "")
+    : location.pathname.replace("/journal/", "");
+
+  const validateForm = () => {
+    if (inputState.content.length < 2) {
+      alert("내용을 최소 2글자 이상 작성해주세요.");
+      return false;
+    }
+    if (inputState.content.length > 1000) {
+      alert("알 수 없는 오류가 발생하였습니다.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const onSubmit = async () => {
+    if (validateForm()) {
+      if (params === "write") {
+        const response = await diaryCreate(inputState);
+        if (response === true) {
+        } else {
+          if (response === 400) {
+            alert("선택된 일자가 오늘의 일자보다 앞섭니다.");
+          }
+        }
+      }
+      if (params !== "write") {
+        const response = await diaryUpdate(inputState);
+        if (response === true) {
+        } else {
+          if (response === 400) {
+            alert("선택된 일자가 오늘의 일자보다 앞섭니다.");
+          }
+          if (response === 403) {
+            alert("권한이 없습니다.");
+          }
+        }
+      }
+    }
+  };
+
+  const fetchData = async () => {
+    setDiaryState({
+      id: 0,
+      date: "",
+      content: "",
+    });
+
+    if (params !== "write") {
+      const data: DiaryLoadResponseType = (await diaryLoad({
+        diaryId: parseInt(params),
+      })) as DiaryLoadResponseType;
+
+      setDiaryState(data);
+    }
+
+    if (params === "write")
+      if (dateInputRef.current) dateInputRef.current.valueAsDate = new Date();
+  };
+
   useEffect(() => {
-    if (openType === "read") setEditState(false);
-  }, []);
+    if (params !== "write") setEditState(false);
+
+    fetchData();
+
+    setInputState({
+      id: parseInt(params),
+      date: diaryState.date,
+      content: diaryState.content,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   return (
     <>
       <Title>
-        {openType === "read" && (
-          <span onClick={() => setEditState(!editState)}>
-            <img src={Edit} alt="edit farm" />
-            일지 수정
-          </span>
+        {params !== "write" && (
+          <>
+            <span onClick={() => setEditState(!editState)}>
+              <img src={Edit} alt="edit farm" />
+              일지 수정
+            </span>
+            <span>
+              <img src={GrayClose} alt="create farm" />
+              일지 삭제
+            </span>
+          </>
         )}
-        <span>
-          <img src={GrayClose} alt="create farm" />
-          일지 삭제
-        </span>
       </Title>
       <Background>
         <Head>
           <span>
             <img src={Calendar} alt="calendar" />
-            {editState ? <input type="date" /> : <h1>{date}</h1>}
+            {editState ? (
+              <input
+                type="date"
+                ref={dateInputRef}
+                defaultValue={diaryState.date}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  let temp: DiaryCreateRequestType = Object.assign(
+                    {},
+                    inputState
+                  );
+                  temp.date = e.currentTarget.value;
+                  setInputState(temp);
+                }}
+              />
+            ) : (
+              <h1>{diaryState.date}</h1>
+            )}
           </span>
         </Head>
         <textarea
-          placeholder="내용을 작성해주세요."
+          key={diaryState.id}
+          placeholder={editState === true ? "내용을 작성해주세요." : ""}
           autoComplete="DoNotAutoComplete"
+          maxLength={1000}
+          defaultValue={diaryState.content}
           disabled={!editState}
-          value={inputState.content}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             let temp: DiaryCreateRequestType = Object.assign({}, inputState);
             temp.content = e.currentTarget.value;
             setInputState(temp);
           }}
+          ref={textInputRef}
         />
         <Foot>
           {editState && (
-            <span onClick={() => {}}>
-              <img src={Save} alt="calendar" />
-              <span>일지 저장</span>
-            </span>
+            <>
+              <span>{textInputRef.current?.value.length} / 1000</span>
+              <button onClick={() => {}}>
+                <img src={Save} alt="calendar" />
+                <span onClick={() => onSubmit()}>
+                  일지 {params === "write" ? "생성" : "저장"}
+                </span>
+              </button>
+            </>
           )}
         </Foot>
       </Background>
@@ -173,14 +277,23 @@ const Foot = styled.div`
   height: ${pxToRem(80)}rem;
 
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 
   border-top: 1px solid ${({ theme }) => theme.colors.grey1f};
 
   > span {
+    color: ${({ theme }) => theme.colors.grey1f};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
+  }
+
+  > button {
+    background-color: transparent;
+
     display: flex;
     align-items: center;
+
+    border: none;
 
     ${({ theme }) => theme.common.hoverEffect};
 

@@ -22,7 +22,7 @@ export const farmLoadList = async ({
     .catch(async (error) => {
       if (error.response.status === 401)
         if (await userRefresh())
-          farmLoadList({
+          return farmLoadList({
             page: page,
             size: size,
           });

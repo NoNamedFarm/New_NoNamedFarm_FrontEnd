@@ -1,10 +1,8 @@
-import moment from "moment";
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { farmLoadAll } from "../../apis/farm/loadAll";
 import { Return } from "../../assets/images";
 import { farmStateAtom, farmStateAtomType } from "../../atoms/farmState";
 import { userStateAtom, userStateAtomType } from "../../atoms/userState";
@@ -18,8 +16,7 @@ interface PageFrameProps {
 
 function PageFrame({ children }: PageFrameProps) {
   const [userState] = useRecoilState<userStateAtomType>(userStateAtom);
-  const [farmState, setFarmState] =
-    useRecoilState<farmStateAtomType>(farmStateAtom);
+  const [farmState] = useRecoilState<farmStateAtomType>(farmStateAtom);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const contents = searchParams.get("contents");
@@ -33,32 +30,6 @@ function PageFrame({ children }: PageFrameProps) {
       navigate("/");
       return;
     }
-
-    const fetchData = async () => {
-      if (params.id) {
-        let now;
-        const labelElement = document.getElementsByClassName(
-          "react-calendar__navigation__label__labelText"
-        )[0];
-
-        if (labelElement)
-          now = moment(labelElement.innerHTML, "YYYY년 MM월").toDate();
-        else now = new Date();
-
-        const year: number = now.getFullYear();
-        const month: number = now.getMonth() + 1;
-
-        const data = await farmLoadAll({
-          farmId: parseInt(params.id),
-          year: year,
-          month: month,
-        });
-
-        setFarmState(data);
-      }
-    };
-
-    fetchData();
   }, [params.id]);
 
   return (

@@ -26,7 +26,7 @@ export const farmLoadCycle = async ({
     .catch(async (error) => {
       if (error.response.status === 401)
         if (await userRefresh())
-          farmLoadCycle({
+          return farmLoadCycle({
             farmId: farmId,
             year: year,
             month: month,

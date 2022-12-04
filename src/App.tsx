@@ -46,7 +46,15 @@ function App() {
             }
           />
           <Route
-            path="/journal/:date"
+            path="/journal/read/:id"
+            element={
+              <PageFrame>
+                <JournalPage />
+              </PageFrame>
+            }
+          />
+          <Route
+            path="/journal/write"
             element={
               <PageFrame>
                 <JournalPage />

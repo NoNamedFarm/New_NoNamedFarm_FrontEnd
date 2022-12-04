@@ -24,7 +24,7 @@ export const diaryLoadList = async ({
     .catch(async (error) => {
       if (error.response.status === 401)
         if (await userRefresh())
-          diaryLoadList({
+          return diaryLoadList({
             page: page,
             size: size,
           });

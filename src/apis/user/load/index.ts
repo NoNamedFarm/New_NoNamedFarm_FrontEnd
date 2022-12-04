@@ -14,6 +14,6 @@ export const userLoad = async (): Promise<userStateAtomType | boolean | any> =>
       return response.data;
     })
     .catch(async () => {
-      if (await userRefresh(true)) userLoad();
+      if (await userRefresh(true)) return userLoad();
       return false;
     });

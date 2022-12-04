@@ -48,6 +48,10 @@ const FarmDeleteModal = ({ farmId }: FarmDeleteModalProps) => {
     if (response === true) {
       setModalState({ title: "", modalContents: null });
       loadMore();
+    } else {
+      if (response === 403) {
+        alert("권한이 없습니다.");
+      }
     }
   };
 

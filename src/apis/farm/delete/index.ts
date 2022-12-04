@@ -5,7 +5,7 @@ import { userRefresh } from "../../user/refresh";
 
 export const farmDelete = async ({
   farmId,
-}: FarmDeleteRequestType): Promise<boolean> =>
+}: FarmDeleteRequestType): Promise<boolean | number> =>
   await axios
     .delete(`${process.env.REACT_APP_BASE_URL}/farm/${farmId}`, {
       headers: { Authorization: `Bearer ${C.getCookie("accessToken")}` },
@@ -20,5 +20,5 @@ export const farmDelete = async ({
           farmDelete({
             farmId: farmId,
           });
-      return false;
+      return error.response.status;
     });

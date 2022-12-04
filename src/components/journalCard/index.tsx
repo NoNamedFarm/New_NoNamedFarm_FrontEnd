@@ -15,17 +15,19 @@ const JournalCard = ({ journalId, date }: JournalCardProps) => {
   const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
 
   return (
-    <Background to={`/journal/${date}?type=read`}>
+    <Background to={`/journal/read/${journalId}`}>
       <h1>{date}</h1>
       <img
         src={Close}
         alt="close"
-        onClick={() =>
+        onClick={(e: React.MouseEvent<HTMLImageElement>) => {
+          e.preventDefault();
+
           setModalState({
             title: "",
             modalContents: <JournalDeleteModal journalId={journalId} />,
-          })
-        }
+          });
+        }}
       />
     </Background>
   );

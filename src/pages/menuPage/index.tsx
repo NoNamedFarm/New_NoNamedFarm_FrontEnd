@@ -11,11 +11,6 @@ import { pxToRem } from "../../utils/pxToRem";
 function MenuPage() {
   const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
 
-  const now = new Date();
-  const dateForm: string = `${now.getFullYear()}-${
-    now.getMonth() + 1
-  }-${now.getDate()}`;
-
   const [searchParams] = useSearchParams();
   const contents = searchParams.get("contents");
   const navigate = useNavigate();
@@ -45,7 +40,7 @@ function MenuPage() {
           <span>
             <span
               onClick={() => {
-                navigate(`/journal/${dateForm}?type=write`);
+                navigate(`/journal/write`);
               }}
             >
               <img src={Create} alt="create journal" />

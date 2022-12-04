@@ -30,8 +30,7 @@ const DateInfo = ({
       const now = moment(
         document.getElementsByClassName(
           "react-calendar__navigation__label__labelText"
-        )[0].innerHTML,
-        "YYYY년 MM월"
+        )[0].innerHTML
       ).toDate();
 
       const year: number = now.getFullYear();
@@ -184,12 +183,12 @@ const Wrapper = styled.div`
 
       :nth-of-type(6) {
         abbr {
-          color: ${({ theme }) => theme.colors.temperature};
+          color: ${({ theme }) => theme.colors.humidity};
         }
       }
       :nth-of-type(7) {
         abbr {
-          color: ${({ theme }) => theme.colors.humidity};
+          color: ${({ theme }) => theme.colors.temperature};
         }
       }
     }
