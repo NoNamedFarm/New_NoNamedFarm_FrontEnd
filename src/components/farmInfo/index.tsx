@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { pxToRem } from "../../utils/pxToRem";
 import Gauge from "../gauge";
 
 interface FarmInfoProps {

@@ -1,10 +1,15 @@
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLocation, useSearchParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { farmLoadAll } from "../../apis/farm/loadAll";
 import { Return } from "../../assets/images";
+import { farmStateAtom, farmStateAtomType } from "../../atoms/farmState";
+import { userStateAtom, userStateAtomType } from "../../atoms/userState";
 import Header from "../../components/header";
-import { getRegisterDate } from "../../utils/getRegisterDate";
+import { getCookie } from "../../utils/cookie";
 import { pxToRem } from "../../utils/pxToRem";
 
 interface PageFrameProps {
@@ -12,44 +17,75 @@ interface PageFrameProps {
 }
 
 function PageFrame({ children }: PageFrameProps) {
-  const location = useLocation();
+  const [userState] = useRecoilState<userStateAtomType>(userStateAtom);
+  const [farmState, setFarmState] =
+    useRecoilState<farmStateAtomType>(farmStateAtom);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const contents = searchParams.get("contents");
 
-  const date = "2022-10-18";
-  const crop = "상추";
+  const params = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const farmAmount = 0;
-  const journalAmount = 0;
+  useEffect(() => {
+    if (!getCookie("accessToken")) {
+      navigate("/");
+      return;
+    }
 
-  const temp = new Date().setDate(new Date().getDate() - 10);
-  const yesterday = new Date(moment(temp).format("MM/DD/YYYY"));
+    const fetchData = async () => {
+      if (params.id) {
+        let now;
+        const labelElement = document.getElementsByClassName(
+          "react-calendar__navigation__label__labelText"
+        )[0];
+
+        if (labelElement)
+          now = moment(labelElement.innerHTML, "YYYY년 MM월").toDate();
+        else now = new Date();
+
+        const year: number = now.getFullYear();
+        const month: number = now.getMonth() + 1;
+
+        const data = await farmLoadAll({
+          farmId: parseInt(params.id),
+          year: year,
+          month: month,
+        });
+
+        setFarmState(data);
+      }
+    };
+
+    fetchData();
+  }, [params.id]);
 
   return (
     <>
       <Header />
       <Wrapper>
         <Title>
-          <h1>홍길동전</h1>
+          <h1 onClick={() => console.log(farmState)}>{userState.nickname}</h1>
           {location.pathname.includes("/farm") ? (
             <div>
-              <span>{date}</span>
+              <span>{farmState.createdDate}</span>
               <span>
-                작물 : <strong>{crop}</strong>
+                작물 : <strong>{farmState.farmCrop}</strong>
               </span>
             </div>
           ) : (
             <div>
               <div>
                 <span>
-                  보유 농장 <strong>{farmAmount}</strong>
+                  보유 농장 <strong>{userState.totalFarm}</strong>
                 </span>
                 <span>
-                  농장 일지 <strong>{journalAmount}</strong>
+                  농장 일지 <strong>{userState.totalDiary}</strong>
                 </span>
               </div>
               <span>
-                가입한지 <strong>{getRegisterDate(yesterday)}</strong> 되었어요.
+                가입한지 <strong>{userState.createDate}</strong> 일 되었어요.
               </span>
             </div>
           )}
@@ -63,13 +99,23 @@ function PageFrame({ children }: PageFrameProps) {
               : 0
           }
         >
-          {!location.pathname.includes("/menu") && (
+          {!location.pathname.includes("/menu") &&
+          location.pathname.includes("/farm") ? (
             <div>
-              <Link to="/menu">
+              <Link to="/menu?contents=farm">
                 <img src={Return} alt="create journal" />
                 돌아가기
               </Link>
             </div>
+          ) : (
+            location.pathname.includes("/journal") && (
+              <div>
+                <Link to="/menu?contents=journal">
+                  <img src={Return} alt="create journal" />
+                  돌아가기
+                </Link>
+              </div>
+            )
           )}
           {location.pathname.includes("/menu") && (
             <>
@@ -121,6 +167,7 @@ const Title = styled.div`
   }
 
   span {
+    margin-right: ${pxToRem(6)}rem;
     color: ${({ theme }) => theme.colors.grey1f};
     font-size: ${({ theme }) => theme.fontSizes.subText};
 
@@ -130,7 +177,7 @@ const Title = styled.div`
   }
 
   strong {
-    color: ${({ theme }) => theme.colors.grey2f};
+    color: ${({ theme }) => theme.colors.grey1f};
     font-size: ${({ theme }) => theme.fontSizes.subText};
   }
 

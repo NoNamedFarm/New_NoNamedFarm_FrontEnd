@@ -1,20 +1,38 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { Create } from "../../assets/images";
+import { modalStateAtom, modalStateAtomType } from "../../atoms/modalState";
 import FarmMenu from "../../components/menu/farm";
 import JournalMenu from "../../components/menu/journal";
+import FarmCreateModal from "../../components/modal/farmCreate";
 import { pxToRem } from "../../utils/pxToRem";
 
 function MenuPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
+
+  const now = new Date();
+  const dateForm: string = `${now.getFullYear()}-${
+    now.getMonth() + 1
+  }-${now.getDate()}`;
+
+  const [searchParams] = useSearchParams();
   const contents = searchParams.get("contents");
+  const navigate = useNavigate();
 
   return (
     <Wrapper>
       {contents === "farm" && (
         <>
           <span>
-            <span>
+            <span
+              onClick={() => {
+                setModalState({
+                  title: "농장 생성",
+                  modalContents: <FarmCreateModal />,
+                });
+              }}
+            >
               <img src={Create} alt="create farm" />
               농장 생성
             </span>
@@ -25,7 +43,11 @@ function MenuPage() {
       {contents === "journal" && (
         <>
           <span>
-            <span>
+            <span
+              onClick={() => {
+                navigate(`/journal/${dateForm}?type=write`);
+              }}
+            >
               <img src={Create} alt="create journal" />
               일지 생성
             </span>

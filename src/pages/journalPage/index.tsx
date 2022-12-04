@@ -1,21 +1,40 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { Calendar, Close, Edit, Save } from "../../assets/images";
+import { Calendar, Edit, GrayClose, Save } from "../../assets/images";
+import { DiaryCreateRequestType } from "../../assets/types/diary/create/request";
 import { pxToRem } from "../../utils/pxToRem";
 
-function JournalPage() {
+interface JournalPageProps {
+  openType?: string;
+}
+
+function JournalPage({ openType }: JournalPageProps) {
+  const [editState, setEditState] = useState<boolean>(true);
+
   const params = useParams();
   const date = params.date;
+
+  const [inputState, setInputState] = useState<DiaryCreateRequestType>({
+    date: date!,
+    content: "",
+  });
+
+  useEffect(() => {
+    if (openType === "read") setEditState(false);
+  }, []);
 
   return (
     <>
       <Title>
+        {openType === "read" && (
+          <span onClick={() => setEditState(!editState)}>
+            <img src={Edit} alt="edit farm" />
+            일지 수정
+          </span>
+        )}
         <span>
-          <img src={Edit} alt="edit farm" />
-          일지 수정
-        </span>
-        <span>
-          <img src={Close} alt="create farm" />
+          <img src={GrayClose} alt="create farm" />
           일지 삭제
         </span>
       </Title>
@@ -23,18 +42,27 @@ function JournalPage() {
         <Head>
           <span>
             <img src={Calendar} alt="calendar" />
-            <h1>{date}</h1>
+            {editState ? <input type="date" /> : <h1>{date}</h1>}
           </span>
         </Head>
         <textarea
           placeholder="내용을 작성해주세요."
           autoComplete="DoNotAutoComplete"
+          disabled={!editState}
+          value={inputState.content}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            let temp: DiaryCreateRequestType = Object.assign({}, inputState);
+            temp.content = e.currentTarget.value;
+            setInputState(temp);
+          }}
         />
         <Foot>
-          <span>
-            <img src={Save} alt="calendar" />
-            <span>일지 저장</span>
-          </span>
+          {editState && (
+            <span onClick={() => {}}>
+              <img src={Save} alt="calendar" />
+              <span>일지 저장</span>
+            </span>
+          )}
         </Foot>
       </Background>
     </>
@@ -84,21 +112,10 @@ const Title = styled.div`
     color: ${({ theme }) => theme.colors.grey1f};
     font-size: ${({ theme }) => theme.fontSizes.subText};
 
-    :first-of-type {
-      ${({ theme }) => theme.common.hoverEffect};
+    ${({ theme }) => theme.common.hoverEffect};
 
-      > img {
-        margin-right: ${pxToRem(8)}rem;
-      }
-    }
-    :last-of-type {
-      ${({ theme }) => theme.common.hoverEffectRed};
-
-      > img {
-        margin-right: ${pxToRem(8)}rem;
-
-        filter: grayscale(1);
-      }
+    > img {
+      margin-right: ${pxToRem(8)}rem;
     }
   }
 `;
@@ -118,6 +135,19 @@ const Head = styled.div`
   > span {
     display: flex;
     align-items: center;
+
+    > input {
+      padding: ${pxToRem(16)}rem;
+
+      width: ${pxToRem(238)}rem;
+      height: ${pxToRem(50)}rem;
+
+      color: ${({ theme }) => theme.colors.grey1f};
+      font-size: ${({ theme }) => theme.fontSizes.description};
+
+      border: 1px solid ${({ theme }) => theme.colors.grey1f};
+      border-radius: 0.5rem;
+    }
 
     > h1 {
       color: ${({ theme }) => theme.colors.grey1f};

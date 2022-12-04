@@ -13,6 +13,7 @@ export { default as Save } from "./save.png";
 export { default as BackgroundImage } from "./backgroundImage.png";
 export { default as LeftArrow } from "./leftArrow.png";
 export { default as RightArrow } from "./rightArrow.png";
+export { default as GrayClose } from "./grayClose.png";
 
 export const InfoCardIcons: string[] = [
   Card_1,

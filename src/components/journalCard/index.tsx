@@ -1,15 +1,32 @@
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { Close } from "../../assets/images";
+import { modalStateAtom, modalStateAtomType } from "../../atoms/modalState";
 import { pxToRem } from "../../utils/pxToRem";
+import JournalDeleteModal from "../modal/journalDelete";
 
-const JournalCard = () => {
-  const Date = "2022-11-04";
+interface JournalCardProps {
+  journalId: number;
+  date: string;
+}
+
+const JournalCard = ({ journalId, date }: JournalCardProps) => {
+  const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
 
   return (
-    <Background to={`/journal/${Date}`}>
-      <h1>{Date}</h1>
-      <img src={Close} alt="close" />
+    <Background to={`/journal/${date}?type=read`}>
+      <h1>{date}</h1>
+      <img
+        src={Close}
+        alt="close"
+        onClick={() =>
+          setModalState({
+            title: "",
+            modalContents: <JournalDeleteModal journalId={journalId} />,
+          })
+        }
+      />
     </Background>
   );
 };

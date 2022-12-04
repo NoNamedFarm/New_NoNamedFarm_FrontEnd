@@ -1,45 +1,111 @@
+import moment from "moment";
 import { useParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { farmLoadAll } from "../../apis/farm/loadAll";
 import { Edit, Refresh } from "../../assets/images";
+import { farmStateAtom, farmStateAtomType } from "../../atoms/farmState";
+import { modalStateAtom, modalStateAtomType } from "../../atoms/modalState";
 import DateInfo from "../../components/dateInfo";
 import FarmInfo from "../../components/farmInfo";
+import FarmUpdateModal from "../../components/modal/farmUpdate";
 import Switch from "../../components/switch";
-import { baskedDate } from "../../utils/baskedDate";
-import { airHumidity, soilHumidity, temperature } from "../../utils/farmInfo";
 import { pxToRem } from "../../utils/pxToRem";
-import { wateredDate } from "../../utils/wateredDate";
 
 function FarmPage() {
+  const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
+  const [farmState, setFarmState] =
+    useRecoilState<farmStateAtomType>(farmStateAtom);
+
   const params = useParams();
+
+  const fetchData = async () => {
+    if (params.id) {
+      const now = moment(
+        document.getElementsByClassName(
+          "react-calendar__navigation__label__labelText"
+        )[0].innerHTML,
+        "YYYY년 MM월"
+      ).toDate();
+
+      const year: number = now.getFullYear();
+      const month: number = now.getMonth() + 1;
+
+      const data = await farmLoadAll({
+        farmId: parseInt(params.id),
+        year: year,
+        month: month,
+      });
+
+      data.waterCycleResponses = farmState.waterCycleResponses;
+      data.lightCycleResponses = farmState.lightCycleResponses;
+
+      setFarmState(data);
+    }
+  };
 
   return (
     <>
       <Title>
-        <span>
+        <span
+          onClick={() => {
+            setModalState({
+              title: "농장 수정",
+              modalContents: <FarmUpdateModal />,
+            });
+          }}
+        >
           <img src={Edit} alt="edit farm" />
           농장 정보 수정
         </span>
-        <span>
+        <span
+          onClick={() => {
+            fetchData();
+          }}
+        >
           <img src={Refresh} alt="create farm" />
           새로고침
         </span>
       </Title>
       <InfoWrapper>
         <div>
-          <DateInfo baskedDate={baskedDate} wateredDate={wateredDate} />
+          <DateInfo
+            key={farmState.id}
+            lightCycleResponses={
+              farmState.lightCycleResponses
+                ? farmState.lightCycleResponses
+                : [""]
+            }
+            waterCycleResponses={
+              farmState.waterCycleResponses
+                ? farmState.waterCycleResponses
+                : [""]
+            }
+          />
         </div>
         <div>
           <span>
-            <Switch id="water" label="물 주기" />
-            <Switch id="light" label="빛 주기" />
+            <Switch
+              type="water"
+              isChecked={Boolean(farmState.isWater)}
+              id="water"
+              label="물 주기"
+            />
+            <Switch
+              type="light"
+              isChecked={Boolean(farmState.isLight)}
+              id="light"
+              label="빛 주기"
+            />
           </span>
           <span>
-            물을 안 준 지 <strong>{50}</strong> 일이 지났습니다.
+            물을 안 준 지 <strong>{farmState.lastCycleDate}</strong> 일이
+            지났습니다.
           </span>
           <FarmInfo
-            temperature={Math.round(temperature)}
-            soilHumidity={Math.round(soilHumidity)}
-            airHumidity={Math.round(airHumidity)}
+            temperature={Math.round(farmState.temperature)}
+            soilHumidity={Math.round((farmState.soilHumidity / 4095) * 100)}
+            airHumidity={Math.round(farmState.airHumidity)}
           />
         </div>
       </InfoWrapper>

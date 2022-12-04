@@ -80,7 +80,8 @@ const Background = styled.div`
 
     border-bottom: none;
 
-    a {
+    a,
+    button {
       color: ${({ theme }) => theme.colors.white};
     }
   }

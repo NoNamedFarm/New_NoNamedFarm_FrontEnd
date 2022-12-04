@@ -1,26 +1,58 @@
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { Close } from "../../assets/images";
+import { modalStateAtom, modalStateAtomType } from "../../atoms/modalState";
 import { pxToRem } from "../../utils/pxToRem";
+import FarmDeleteModal from "../modal/farmDelete";
 
-const FarmCard = () => {
-  const id = 1;
+interface FarmCardProps {
+  farmId: number;
+  farmName: string;
+  farmCrop: string;
+  createdDate: string;
+  temperature: number;
+  airHumidity: number;
+  soilHumidity: number;
+}
+
+const FarmCard = ({
+  farmId,
+  farmName,
+  farmCrop,
+  createdDate,
+  temperature,
+  airHumidity,
+  soilHumidity,
+}: FarmCardProps) => {
+  const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
 
   return (
-    <Background to={`/farm/${id}`}>
+    <Background to={`/farm/${farmId}`}>
       <Wrapper>
-        <h1>농장 이름</h1>
+        <h1>{farmName}</h1>
         <div>
-          <span>상추</span>
-          <span>22-10-18</span>
+          <span>{farmCrop}</span>
+          <span>{createdDate}</span>
         </div>
-        <img src={Close} alt="close" />
+        <img
+          src={Close}
+          alt="close"
+          onClick={(e: React.MouseEvent<HTMLImageElement>) => {
+            e.preventDefault();
+
+            setModalState({
+              title: "",
+              modalContents: <FarmDeleteModal farmId={farmId} />,
+            });
+          }}
+        />
       </Wrapper>
       <Wrapper>
         <ul>
-          <li>토양 습도 : 75%</li>
-          <li>온도 : 23.5°C</li>
-          <li>공기 습도 : 50%</li>
+          <li>토양 습도 : {temperature}%</li>
+          <li>온도 : {airHumidity}°C</li>
+          <li>공기 습도 : {soilHumidity}%</li>
         </ul>
       </Wrapper>
     </Background>

@@ -1,16 +1,49 @@
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { farmToggleLight } from "../../apis/farm/toggleLight";
+import { farmToggleWater } from "../../apis/farm/toggleWater";
+import { farmStateAtom, farmStateAtomType } from "../../atoms/farmState";
 import { pxToRem } from "../../utils/pxToRem";
 
 interface SwitchProps {
+  type: string;
+  isChecked: boolean;
   label: string;
   id: string;
 }
 
-const Switch = ({ label, id }: SwitchProps) => {
+const Switch = ({ type, isChecked, label, id }: SwitchProps) => {
+  const [farmState, setFarmState] =
+    useRecoilState<farmStateAtomType>(farmStateAtom);
+
+  const toggleState = async (e: HTMLInputElement) => {
+    if (type === "water") {
+      if (await farmToggleWater({ farmId: farmState.id })) {
+        let temp: farmStateAtomType = Object.assign({}, farmState);
+        temp.isWater = +!e.checked;
+        setFarmState(temp);
+      }
+    }
+    if (type === "light") {
+      if (await farmToggleLight({ farmId: farmState.id })) {
+        let temp: farmStateAtomType = Object.assign({}, farmState);
+        temp.isLight = +!e.checked;
+        setFarmState(temp);
+      }
+    }
+  };
+
   return (
     <Background>
       <span>{label}</span>
-      <input type="checkbox" id={id} />
+      <input
+        type="checkbox"
+        id={id}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          toggleState(e.currentTarget)
+        }
+        checked={isChecked}
+      />
       <label htmlFor={id}>
         <button />
       </label>

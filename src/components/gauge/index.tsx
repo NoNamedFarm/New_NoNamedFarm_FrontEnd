@@ -23,6 +23,7 @@ const Gauge = ({ type, value, label, min, max }: GaugeProps) => {
           <span>{max}</span>
         </div>
         <input
+          key={value}
           type="range"
           min={min}
           max={max}

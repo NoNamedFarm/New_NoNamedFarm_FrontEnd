@@ -1,11 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ProjectLogo } from "../../assets/images";
 import { pxToRem } from "../../utils/pxToRem";
 import { useEffect, useState } from "react";
+import * as C from "../../utils/cookie";
+import { userLogout } from "../../apis/user/logout";
 
 const Header = () => {
   const [hideHeaderState, setHideHeaderState] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const loginState = C.getCookie("accessToken");
 
   useEffect(() => {
     let prevScrollTop = 0;
@@ -27,10 +33,23 @@ const Header = () => {
       <Logo to="/menu?contents=farm">
         <img src={ProjectLogo} alt="Logo" />
       </Logo>
-      <RC>
-        <Link to="/login">로그인</Link>
-        <Link to="/register">가입</Link>
-      </RC>
+      {loginState ? (
+        <Nav>
+          <button
+            onClick={() => {
+              userLogout();
+              navigate("/");
+            }}
+          >
+            로그아웃
+          </button>
+        </Nav>
+      ) : (
+        <Nav>
+          <Link to="/login">로그인</Link>
+          <Link to="/register">가입</Link>
+        </Nav>
+      )}
     </Wrapper>
   );
 };
@@ -79,13 +98,27 @@ const Logo = styled(Link)`
   }
 `;
 
-const RC = styled.div`
+const Nav = styled.div`
   a {
     margin-left: ${pxToRem(25)}rem;
 
     color: ${({ theme }) => theme.colors.grey1f};
     font-size: ${({ theme }) => theme.fontSizes.subText};
     text-decoration: none;
+
+    ${({ theme }) => theme.common.hoverEffect}
+  }
+
+  button {
+    background-color: transparent;
+
+    margin-left: ${pxToRem(25)}rem;
+
+    color: ${({ theme }) => theme.colors.grey1f};
+    font-size: ${({ theme }) => theme.fontSizes.subText};
+    text-decoration: none;
+
+    border: none;
 
     ${({ theme }) => theme.common.hoverEffect}
   }

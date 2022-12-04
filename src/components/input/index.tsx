@@ -2,40 +2,118 @@ import styled from "styled-components";
 import { pxToRem } from "../../utils/pxToRem";
 
 interface InputFieldProps {
+  id: string;
   type: "normal" | "password" | "duplicateCheck" | "checkbox";
   label: string;
-  id: string;
+  placeholder?: string;
+  minLength?: number;
+  maxLength?: number;
+  warning?: string;
+  value?: string;
+  setValue?: (v: string) => void;
+  duplicateCheckState?: boolean;
+  duplicateCheck?: () => void;
+  refObj?: React.RefObject<HTMLButtonElement>;
 }
 
-const InputField = ({ type, label, id }: InputFieldProps) => {
+const InputField = ({
+  id,
+  type,
+  label,
+  placeholder,
+  minLength,
+  maxLength,
+  warning,
+  value,
+  setValue,
+  duplicateCheckState,
+  duplicateCheck,
+  refObj,
+}: InputFieldProps) => {
   return (
     <>
       {type === "checkbox" && (
         <CheckboxWrapper>
-          <input id={id} type="checkbox" />
+          <input
+            id={id}
+            type="checkbox"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              (refObj!.current!.disabled = !e.currentTarget.checked)
+            }
+          />
           <label htmlFor={id}>{label}</label>
         </CheckboxWrapper>
       )}
       <General>
         {type === "duplicateCheck" && (
           <OverlayWrapper>
-            <label htmlFor={id}>{label}</label>
             <div>
-              <input id={id} type="text" autoComplete="DoNotAutoComplete" />
-              <button>중복 확인</button>
+              <label htmlFor={id}>{label}</label>
+              <span>{warning}</span>
+            </div>
+            <div>
+              <input
+                id={id}
+                type="text"
+                placeholder={placeholder}
+                minLength={minLength}
+                maxLength={maxLength}
+                autoComplete="DoNotAutoComplete"
+                value={value}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setValue!(e.currentTarget.value)
+                }
+              />
+              <button
+                type="button"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  duplicateCheck!();
+                }}
+                disabled={duplicateCheckState}
+              >
+                중복 확인
+              </button>
             </div>
           </OverlayWrapper>
         )}
         {type === "normal" && (
           <InputWrapper>
-            <label htmlFor={id}>{label}</label>
-            <input id={id} type="text" autoComplete="DoNotAutoComplete" />
+            <div>
+              <label htmlFor={id}>{label}</label>
+              <span>{warning}</span>
+            </div>
+            <input
+              id={id}
+              type="text"
+              placeholder={placeholder}
+              minLength={minLength}
+              maxLength={maxLength}
+              autoComplete="DoNotAutoComplete"
+              value={value}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setValue!(e.currentTarget.value)
+              }
+            />
           </InputWrapper>
         )}
         {type === "password" && (
           <InputWrapper>
-            <label htmlFor={id}>{label}</label>
-            <input id={id} type="password" />
+            <div>
+              <label htmlFor={id}>{label}</label>
+              <span>{warning}</span>
+            </div>
+            <input
+              id={id}
+              type="password"
+              placeholder="8 ~ 24 글자, 영어 대문자와 소문자, 숫자, 특수문자 조합"
+              minLength={minLength}
+              maxLength={maxLength}
+              value={value}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setValue!(e.currentTarget.value)
+              }
+            />
           </InputWrapper>
         )}
       </General>
@@ -47,9 +125,16 @@ export default InputField;
 
 const General = styled.div`
   label,
+  span,
   input,
   button {
     font-size: ${({ theme }) => theme.fontSizes.description};
+  }
+  span {
+    margin: 0 !important;
+    margin-left: ${pxToRem(10)}rem !important;
+
+    color: ${({ theme }) => theme.colors.error};
   }
   input,
   button {
@@ -81,30 +166,32 @@ const OverlayWrapper = styled.div`
   margin-bottom: ${pxToRem(25)}rem;
 
   min-width: 10rem;
+  height: 93px;
 
   display: flex;
   flex-direction: column;
-
-  label {
-    margin-bottom: ${pxToRem(8)}rem;
-  }
 
   > div {
     @media screen and (min-width: 800px) {
       max-width: calc(50vw - ${pxToRem(50)}rem);
     }
 
+    margin-bottom: ${pxToRem(8)}rem;
+
     width: ${pxToRem(512)}rem;
     max-width: calc(100vw - ${pxToRem(50)}rem);
 
     display: flex;
-    justify-content: space-between;
   }
 
   input {
     width: 77.5%;
     min-width: 7rem;
     height: ${pxToRem(64)}rem;
+
+    ::placeholder {
+      color: ${({ theme }) => theme.colors.grey1f};
+    }
   }
 
   button {
@@ -120,7 +207,13 @@ const OverlayWrapper = styled.div`
     color: ${({ theme }) => theme.colors.white};
     word-break: keep-all;
 
-    ${({ theme }) => theme.common.hoverEffect};
+    :enabled {
+      ${({ theme }) => theme.common.hoverEffect}
+    }
+
+    :disabled {
+      filter: brightness(85%);
+    }
   }
 `;
 
@@ -130,7 +223,7 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  label {
+  div {
     margin-bottom: ${pxToRem(8)}rem;
   }
 
@@ -143,5 +236,9 @@ const InputWrapper = styled.div`
     max-width: calc(100vw - ${pxToRem(50)}rem);
     min-width: 10rem;
     height: ${pxToRem(64)}rem;
+
+    ::placeholder {
+      color: ${({ theme }) => theme.colors.grey1f};
+    }
   }
 `;
