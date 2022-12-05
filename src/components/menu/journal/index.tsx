@@ -9,34 +9,43 @@ import {
 } from "../../../atoms/diaryListState";
 import { pxToRem } from "../../../utils/pxToRem";
 import JournalCard from "../../journalCard";
+import LoadButton from "../../loadButton";
 
 const JournalMenu = () => {
   const [diaryListState, setDiaryListState] =
     useRecoilState<diaryListStateAtomType>(diaryListStateAtom);
 
-  const loadMore = () => {
+  const loadMore = async (isFirstRendered?: boolean) => {
+    if (isFirstRendered && diaryListState.currentPage! > 0) return;
+
     let temp = Object.assign({}, diaryListState);
     let data: DiaryLoadListResponseType;
 
     if (temp.currentPage! < temp.totalPage + 1) {
-      const fetchData = async () => {
-        data = (await diaryLoadList({
-          page: temp.currentPage!,
-          size: 6,
-        })) as DiaryLoadListResponseType;
+      data = (await diaryLoadList({
+        page: temp.currentPage!,
+        size: 6,
+      })) as DiaryLoadListResponseType;
 
-        if (data) {
-          temp.diaryResponses = data.diaryResponses;
-          temp.totalPage = data.totalPage;
-          setDiaryListState(temp);
-        }
-      };
-      fetchData();
+      if (data) {
+        data.diaryResponses.forEach((v) => {
+          if (!temp.diaryResponses.some((entry) => entry.id === v.id))
+            temp.diaryResponses = [...temp.diaryResponses, v];
+        });
+        if (
+          diaryListState.diaryResponses === temp.diaryResponses &&
+          temp.diaryResponses.length !== 0
+        )
+          alert("더 이상 불러올 항목이 존재하지 않습니다.");
+        if (data.diaryResponses.length === 6) temp.currentPage!++;
+        temp.totalPage = data.totalPage;
+        setDiaryListState(temp);
+      }
     }
   };
 
   useEffect(() => {
-    loadMore();
+    loadMore(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -46,6 +55,10 @@ const JournalMenu = () => {
         diaryListState.diaryResponses.map((v) => (
           <JournalCard key={v.id} journalId={v.id} date={v.date} />
         ))}
+      {diaryListState.totalPage > 0 &&
+        diaryListState.currentPage !== diaryListState.totalPage && (
+          <LoadButton loadType="journal" loadMore={() => loadMore(false)} />
+        )}
     </JournalWrapper>
   );
 };

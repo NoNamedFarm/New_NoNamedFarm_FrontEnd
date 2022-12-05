@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { diaryDelete } from "../../../apis/diary/delete";
@@ -21,24 +20,33 @@ const JournalDeleteModal = ({ journalId }: JournalDeleteModalProps) => {
   const [diaryListState, setDiaryListState] =
     useRecoilState<diaryListStateAtomType>(diaryListStateAtom);
 
-  const loadMore = () => {
+  const refreshList = async () => {
     let temp = Object.assign({}, diaryListState);
+    temp.currentPage = 0;
+    temp.diaryResponses = [];
+
     let data: DiaryLoadListResponseType;
 
     if (temp.currentPage! < temp.totalPage + 1) {
-      const fetchData = async () => {
-        data = (await diaryLoadList({
-          page: temp.currentPage!,
-          size: 6,
-        })) as DiaryLoadListResponseType;
+      data = (await diaryLoadList({
+        page: temp.currentPage!,
+        size: 6,
+      })) as DiaryLoadListResponseType;
 
-        if (data) {
-          temp.diaryResponses = data.diaryResponses;
-          temp.totalPage = data.totalPage;
-          setDiaryListState(temp);
-        }
-      };
-      fetchData();
+      if (data) {
+        data.diaryResponses.forEach((v) => {
+          if (!temp.diaryResponses.some((entry) => entry.id === v.id))
+            temp.diaryResponses = [...temp.diaryResponses, v];
+        });
+        if (
+          diaryListState.diaryResponses === temp.diaryResponses &&
+          temp.diaryResponses.length !== 0
+        )
+          alert("더 이상 불러올 항목이 존재하지 않습니다.");
+        if (data.diaryResponses.length === 6) temp.currentPage!++;
+        temp.totalPage = data.totalPage;
+        setDiaryListState(temp);
+      }
     }
   };
 
@@ -46,7 +54,7 @@ const JournalDeleteModal = ({ journalId }: JournalDeleteModalProps) => {
     const response = await diaryDelete({ id: journalId });
     if (response === true) {
       setModalState({ title: "", modalContents: null });
-      loadMore();
+      refreshList();
     } else {
       if (response === 403) {
         alert("권한이 없습니다.");

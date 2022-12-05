@@ -20,34 +20,41 @@ const FarmDeleteModal = ({ farmId }: FarmDeleteModalProps) => {
   const [farmListState, setFarmListState] =
     useRecoilState<farmListStateAtomType>(farmListStateAtom);
 
-  const loadMore = () => {
+  const refreshList = async () => {
     let temp = Object.assign({}, farmListState);
+    temp.currentPage = 0;
+    temp.farmResponses = [];
+
     let data: FarmLoadListResponseType;
 
-    temp.currentPage = 0;
-
-    const fetchData = async () => {
+    if (temp.currentPage! < temp.totalPage + 1) {
       data = (await farmLoadList({
         page: temp.currentPage!,
         size: 6,
       })) as FarmLoadListResponseType;
 
       if (data) {
-        temp.farmResponses = data.farmResponses;
+        data.farmResponses.forEach((v) => {
+          if (!temp.farmResponses.some((entry) => entry.id === v.id))
+            temp.farmResponses = [...temp.farmResponses, v];
+        });
+        if (
+          farmListState.farmResponses === temp.farmResponses &&
+          temp.farmResponses.length !== 0
+        )
+          alert("더 이상 불러올 항목이 존재하지 않습니다.");
+        if (data.farmResponses.length === 6) temp.currentPage!++;
         temp.totalPage = data.totalPage;
-
         setFarmListState(temp);
       }
-    };
-
-    fetchData();
+    }
   };
 
   const onSubmit = async () => {
     const response = await farmDelete({ farmId });
     if (response === true) {
       setModalState({ title: "", modalContents: null });
-      loadMore();
+      refreshList();
     } else {
       if (response === 403) {
         alert("권한이 없습니다.");

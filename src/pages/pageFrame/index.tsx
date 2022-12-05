@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { userLoad } from "../../apis/user/load";
 import { Return } from "../../assets/images";
 import { farmStateAtom, farmStateAtomType } from "../../atoms/farmState";
 import { userStateAtom, userStateAtomType } from "../../atoms/userState";
@@ -15,7 +16,8 @@ interface PageFrameProps {
 }
 
 function PageFrame({ children }: PageFrameProps) {
-  const [userState] = useRecoilState<userStateAtomType>(userStateAtom);
+  const [userState, setUserState] =
+    useRecoilState<userStateAtomType>(userStateAtom);
   const [farmState] = useRecoilState<farmStateAtomType>(farmStateAtom);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,10 +28,16 @@ function PageFrame({ children }: PageFrameProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (userState.nickname === "") {
+      const fetchData = async () => setUserState(await userLoad());
+      fetchData();
+    }
+
     if (!getCookie("accessToken")) {
       navigate("/");
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
 
   return (

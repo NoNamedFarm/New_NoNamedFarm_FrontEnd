@@ -23,6 +23,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => setUserState(await userLoad());
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

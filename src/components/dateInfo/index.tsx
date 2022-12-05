@@ -27,11 +27,19 @@ const DateInfo = ({
     setTimeout(async () => {
       const temp: farmStateAtomType = Object.assign({}, farmState);
 
-      const now = moment(
+      let now: Date;
+      now = moment(
         document.getElementsByClassName(
           "react-calendar__navigation__label__labelText"
         )[0].innerHTML
       ).toDate();
+      if (`${now}` === "Invalid Date")
+        now = moment(
+          document.getElementsByClassName(
+            "react-calendar__navigation__label__labelText"
+          )[0].innerHTML,
+          "YYYY년 MM월"
+        ).toDate();
 
       const year: number = now.getFullYear();
       const month: number = now.getMonth() + 1;
@@ -79,10 +87,11 @@ const DateInfo = ({
       if (navArrow[3] !== undefined)
         navArrow[3].removeEventListener("click", updateCycles);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [farmState]);
 
   return (
-    <Wrapper>
+    <Wrapper key={farmState.id}>
       <Calendar
         showFixedNumberOfWeeks={true}
         minDetail="month"

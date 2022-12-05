@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { diaryCreate } from "../../apis/diary/create";
@@ -8,11 +8,13 @@ import { diaryUpdate } from "../../apis/diary/update";
 import { Calendar, Edit, GrayClose, Save } from "../../assets/images";
 import { DiaryCreateRequestType } from "../../assets/types/diary/create/request";
 import { DiaryLoadResponseType } from "../../assets/types/diary/load/response";
-import { DiaryUpdateRequestType } from "../../assets/types/diary/update/request";
 import { diaryStateAtom, diaryStateAtomType } from "../../atoms/diaryState";
+import { modalStateAtom, modalStateAtomType } from "../../atoms/modalState";
+import JournalDeleteModal from "../../components/modal/journalDelete";
 import { pxToRem } from "../../utils/pxToRem";
 
 function JournalPage() {
+  const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
   const [diaryState, setDiaryState] =
     useRecoilState<diaryStateAtomType>(diaryStateAtom);
 
@@ -30,6 +32,7 @@ function JournalPage() {
   const params = location.pathname.includes("read")
     ? location.pathname.replace("/journal/read/", "")
     : location.pathname.replace("/journal/", "");
+  const navigate = useNavigate();
 
   const validateForm = () => {
     if (inputState.content.length < 2) {
@@ -49,6 +52,7 @@ function JournalPage() {
       if (params === "write") {
         const response = await diaryCreate(inputState);
         if (response === true) {
+          navigate("/menu?contents=journal");
         } else {
           if (response === 400) {
             alert("선택된 일자가 오늘의 일자보다 앞섭니다.");
@@ -58,6 +62,7 @@ function JournalPage() {
       if (params !== "write") {
         const response = await diaryUpdate(inputState);
         if (response === true) {
+          setEditState(false);
         } else {
           if (response === 400) {
             alert("선택된 일자가 오늘의 일자보다 앞섭니다.");
@@ -77,28 +82,31 @@ function JournalPage() {
       content: "",
     });
 
-    if (params !== "write") {
-      const data: DiaryLoadResponseType = (await diaryLoad({
-        diaryId: parseInt(params),
-      })) as DiaryLoadResponseType;
+    const data: DiaryLoadResponseType = (await diaryLoad({
+      diaryId: parseInt(params),
+    })) as DiaryLoadResponseType;
 
-      setDiaryState(data);
-    }
+    setDiaryState(data);
+    setInputState(data);
 
-    if (params === "write")
-      if (dateInputRef.current) dateInputRef.current.valueAsDate = new Date();
+    return data;
   };
 
   useEffect(() => {
-    if (params !== "write") setEditState(false);
+    if (params !== "write") {
+      setEditState(false);
 
-    fetchData();
+      fetchData();
+    }
 
-    setInputState({
-      id: parseInt(params),
-      date: diaryState.date,
-      content: diaryState.content,
-    });
+    if (params === "write")
+      if (dateInputRef.current) {
+        dateInputRef.current.valueAsDate = new Date();
+
+        let temp: DiaryCreateRequestType = Object.assign({}, inputState);
+        temp.date = dateInputRef.current.value;
+        setInputState(temp);
+      }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
@@ -111,7 +119,16 @@ function JournalPage() {
               <img src={Edit} alt="edit farm" />
               일지 수정
             </span>
-            <span>
+            <span
+              onClick={() =>
+                setModalState({
+                  title: "",
+                  modalContents: (
+                    <JournalDeleteModal journalId={diaryState.id} />
+                  ),
+                })
+              }
+            >
               <img src={GrayClose} alt="create farm" />
               일지 삭제
             </span>
@@ -146,7 +163,7 @@ function JournalPage() {
           placeholder={editState === true ? "내용을 작성해주세요." : ""}
           autoComplete="DoNotAutoComplete"
           maxLength={1000}
-          defaultValue={diaryState.content}
+          defaultValue={inputState.content}
           disabled={!editState}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             let temp: DiaryCreateRequestType = Object.assign({}, inputState);
@@ -159,11 +176,9 @@ function JournalPage() {
           {editState && (
             <>
               <span>{textInputRef.current?.value.length} / 1000</span>
-              <button onClick={() => {}}>
+              <button onClick={() => onSubmit()}>
                 <img src={Save} alt="calendar" />
-                <span onClick={() => onSubmit()}>
-                  일지 {params === "write" ? "생성" : "저장"}
-                </span>
+                <span>일지 {params === "write" ? "생성" : "저장"}</span>
               </button>
             </>
           )}

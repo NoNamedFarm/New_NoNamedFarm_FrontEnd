@@ -22,11 +22,19 @@ function FarmPage() {
 
   const fetchData = async () => {
     if (params.id) {
-      const now = moment(
+      let now: Date;
+      now = moment(
         document.getElementsByClassName(
           "react-calendar__navigation__label__labelText"
         )[0].innerHTML
       ).toDate();
+      if (`${now}` === "Invalid Date")
+        now = moment(
+          document.getElementsByClassName(
+            "react-calendar__navigation__label__labelText"
+          )[0].innerHTML,
+          "YYYY년 MM월"
+        ).toDate();
 
       const year: number = now.getFullYear();
       const month: number = now.getMonth() + 1;
@@ -37,8 +45,14 @@ function FarmPage() {
         month: month,
       });
 
-      data.waterCycleResponses = farmState.waterCycleResponses;
-      data.lightCycleResponses = farmState.lightCycleResponses;
+      data.waterCycleResponses = [
+        ...farmState.waterCycleResponses,
+        ...data.waterCycleResponses,
+      ];
+      data.lightCycleResponses = [
+        ...farmState.lightCycleResponses,
+        ...data.lightCycleResponses,
+      ];
 
       setFarmState(data);
     }
@@ -63,6 +77,7 @@ function FarmPage() {
     });
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -81,6 +96,22 @@ function FarmPage() {
         </span>
         <span
           onClick={() => {
+            setFarmState({
+              id: 0,
+              farmName: "",
+              farmCrop: "",
+              createdDate: "",
+              temperature: 0,
+              airHumidity: 0,
+              soilHumidity: 0,
+              isWater: 0,
+              isLight: 0,
+              lastCycleDate: 0,
+              waterCycleResponses: [],
+              lightCycleResponses: [],
+              year: 0,
+              month: 0,
+            });
             fetchData();
           }}
         >
@@ -108,13 +139,13 @@ function FarmPage() {
           <span>
             <Switch
               type="water"
-              isChecked={Boolean(farmState.isWater)}
+              isChecked={Boolean(parseInt(farmState.isWater as string))}
               id="water"
               label="물 주기"
             />
             <Switch
               type="light"
-              isChecked={Boolean(farmState.isLight)}
+              isChecked={Boolean(parseInt(farmState.isLight as string))}
               id="light"
               label="빛 주기"
             />

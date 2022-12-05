@@ -50,9 +50,9 @@ const FarmCard = ({
       </Wrapper>
       <Wrapper>
         <ul>
-          <li>토양 습도 : {temperature}%</li>
-          <li>온도 : {airHumidity}°C</li>
-          <li>공기 습도 : {soilHumidity}%</li>
+          <li>토양 습도 : {Math.round((soilHumidity / 4095) * 100)}%</li>
+          <li>온도 : {temperature}°C</li>
+          <li>공기 습도 : {Math.round(airHumidity)}%</li>
         </ul>
       </Wrapper>
     </Background>
@@ -71,7 +71,7 @@ const Background = styled(Link)`
   }
 
   padding: calc(0.5rem + 1vh);
-  margin-bottom: 2.5%;
+  margin-bottom: ${pxToRem(25)}rem;
   margin-right: 2.5%;
 
   width: 29.8%;

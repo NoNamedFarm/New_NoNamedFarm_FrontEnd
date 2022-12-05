@@ -8,8 +8,8 @@ export type farmStateAtomType = {
   temperature: number;
   airHumidity: number;
   soilHumidity: number;
-  isWater: number;
-  isLight: number;
+  isWater: number | string;
+  isLight: number | string;
   lastCycleDate: number;
   waterCycleResponses: string[];
   lightCycleResponses: string[];

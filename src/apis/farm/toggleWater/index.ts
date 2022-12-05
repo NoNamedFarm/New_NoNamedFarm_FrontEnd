@@ -7,9 +7,13 @@ export const farmToggleWater = async ({
   farmId,
 }: FarmSwitchRequestType): Promise<boolean> =>
   await axios
-    .get(`${process.env.REACT_APP_BASE_URL}/farm/switch/water/${farmId}`, {
-      headers: { Authorization: `Bearer ${C.getCookie("accessToken")}` },
-    })
+    .put(
+      `${process.env.REACT_APP_BASE_URL}/farm/switch/water/${farmId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${C.getCookie("accessToken")}` },
+      }
+    )
     .then(() => {
       return true;
     })
