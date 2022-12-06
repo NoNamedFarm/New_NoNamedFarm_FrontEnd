@@ -30,7 +30,7 @@ const Header = () => {
 
   return (
     <Wrapper hideHeaderState={hideHeaderState}>
-      <Logo to="/menu?contents=farm">
+      <Logo to={loginState ? "/menu?contents=farm" : "/"}>
         <img src={ProjectLogo} alt="Logo" />
       </Logo>
       {loginState ? (
