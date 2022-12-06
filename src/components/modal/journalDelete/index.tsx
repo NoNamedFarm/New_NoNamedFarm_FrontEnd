@@ -24,7 +24,6 @@ const JournalDeleteModal = ({ journalId }: JournalDeleteModalProps) => {
     let temp = Object.assign({}, diaryListState);
     temp.currentPage = 0;
     temp.diaryResponses = [];
-
     let data: DiaryLoadListResponseType;
 
     if (temp.currentPage! < temp.totalPage + 1) {
@@ -39,6 +38,7 @@ const JournalDeleteModal = ({ journalId }: JournalDeleteModalProps) => {
             temp.diaryResponses = [...temp.diaryResponses, v];
         });
         if (
+          diaryListState.diaryResponses.length > 6 &&
           diaryListState.diaryResponses === temp.diaryResponses &&
           temp.diaryResponses.length !== 0
         )
@@ -53,8 +53,8 @@ const JournalDeleteModal = ({ journalId }: JournalDeleteModalProps) => {
   const onSubmit = async () => {
     const response = await diaryDelete({ id: journalId });
     if (response === true) {
-      setModalState({ title: "", modalContents: null });
       refreshList();
+      setModalState({ title: "", modalContents: null });
     } else {
       if (response === 403) {
         alert("권한이 없습니다.");

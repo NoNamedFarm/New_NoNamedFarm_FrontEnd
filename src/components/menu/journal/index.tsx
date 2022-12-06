@@ -33,6 +33,7 @@ const JournalMenu = () => {
             temp.diaryResponses = [...temp.diaryResponses, v];
         });
         if (
+          diaryListState.diaryResponses.length > 6 &&
           diaryListState.diaryResponses === temp.diaryResponses &&
           temp.diaryResponses.length !== 0
         )
@@ -50,12 +51,13 @@ const JournalMenu = () => {
   }, []);
 
   return (
-    <JournalWrapper>
+    <JournalWrapper key={diaryListState.totalPage}>
       {diaryListState.diaryResponses &&
         diaryListState.diaryResponses.map((v) => (
           <JournalCard key={v.id} journalId={v.id} date={v.date} />
         ))}
-      {diaryListState.totalPage > 0 &&
+      {diaryListState.diaryResponses.length >= 6 &&
+        diaryListState.totalPage > 0 &&
         diaryListState.currentPage !== diaryListState.totalPage && (
           <LoadButton loadType="journal" loadMore={() => loadMore(false)} />
         )}

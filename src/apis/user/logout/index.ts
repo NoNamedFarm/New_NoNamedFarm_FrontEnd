@@ -10,4 +10,5 @@ export const userLogout = async () =>
     })
     .finally(() => {
       C.deleteCookie("accessToken");
+      window.location.reload();
     });

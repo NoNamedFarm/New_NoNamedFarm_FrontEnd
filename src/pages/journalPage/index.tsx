@@ -4,10 +4,16 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { diaryCreate } from "../../apis/diary/create";
 import { diaryLoad } from "../../apis/diary/load";
+import { diaryLoadList } from "../../apis/diary/loadList";
 import { diaryUpdate } from "../../apis/diary/update";
 import { Calendar, Edit, GrayClose, Save } from "../../assets/images";
 import { DiaryCreateRequestType } from "../../assets/types/diary/create/request";
 import { DiaryLoadResponseType } from "../../assets/types/diary/load/response";
+import { DiaryLoadListResponseType } from "../../assets/types/diary/loadList/response";
+import {
+  diaryListStateAtom,
+  diaryListStateAtomType,
+} from "../../atoms/diaryListState";
 import { diaryStateAtom, diaryStateAtomType } from "../../atoms/diaryState";
 import { modalStateAtom, modalStateAtomType } from "../../atoms/modalState";
 import JournalDeleteModal from "../../components/modal/journalDelete";
@@ -17,6 +23,8 @@ function JournalPage() {
   const [, setModalState] = useRecoilState<modalStateAtomType>(modalStateAtom);
   const [diaryState, setDiaryState] =
     useRecoilState<diaryStateAtomType>(diaryStateAtom);
+  const [diaryListState, setDiaryListState] =
+    useRecoilState<diaryListStateAtomType>(diaryListStateAtom);
 
   const dateInputRef = useRef<HTMLInputElement>(null);
   const textInputRef = useRef<HTMLTextAreaElement>(null);
@@ -33,6 +41,36 @@ function JournalPage() {
     ? location.pathname.replace("/journal/read/", "")
     : location.pathname.replace("/journal/", "");
   const navigate = useNavigate();
+
+  const refreshList = async () => {
+    let temp = Object.assign({}, diaryListState);
+    temp.currentPage = 0;
+    temp.diaryResponses = [];
+    let data: DiaryLoadListResponseType;
+
+    if (temp.currentPage! < temp.totalPage + 1) {
+      data = (await diaryLoadList({
+        page: temp.currentPage!,
+        size: 6,
+      })) as DiaryLoadListResponseType;
+
+      if (data) {
+        data.diaryResponses.forEach((v) => {
+          if (!temp.diaryResponses.some((entry) => entry.id === v.id))
+            temp.diaryResponses = [...temp.diaryResponses, v];
+        });
+        if (
+          diaryListState.diaryResponses.length > 6 &&
+          diaryListState.diaryResponses === temp.diaryResponses &&
+          temp.diaryResponses.length !== 0
+        )
+          alert("더 이상 불러올 항목이 존재하지 않습니다.");
+        if (data.diaryResponses.length === 6) temp.currentPage!++;
+        temp.totalPage = data.totalPage;
+        setDiaryListState(temp);
+      }
+    }
+  };
 
   const validateForm = () => {
     if (inputState.content.length < 2) {
@@ -52,6 +90,7 @@ function JournalPage() {
       if (params === "write") {
         const response = await diaryCreate(inputState);
         if (response === true) {
+          refreshList();
           navigate("/menu?contents=journal");
         } else {
           if (response === 400) {

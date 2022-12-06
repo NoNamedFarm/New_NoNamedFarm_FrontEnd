@@ -33,6 +33,7 @@ const FarmMenu = () => {
             temp.farmResponses = [...temp.farmResponses, v];
         });
         if (
+          farmListState.farmResponses.length > 6 &&
           farmListState.farmResponses === temp.farmResponses &&
           temp.farmResponses.length !== 0
         )
@@ -64,7 +65,8 @@ const FarmMenu = () => {
             soilHumidity={v.soilHumidity}
           />
         ))}
-      {farmListState.totalPage > 0 &&
+      {farmListState.farmResponses.length >= 6 &&
+        farmListState.totalPage > 0 &&
         farmListState.currentPage !== farmListState.totalPage && (
           <LoadButton loadType="farm" loadMore={loadMore} />
         )}

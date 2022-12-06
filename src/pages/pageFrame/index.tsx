@@ -123,7 +123,7 @@ const Wrapper = styled.div`
 
   width: 60%;
   height: auto;
-  min-height: calc(100vh - 6rem);
+  min-height: 100vh;
 `;
 
 const Title = styled.div`

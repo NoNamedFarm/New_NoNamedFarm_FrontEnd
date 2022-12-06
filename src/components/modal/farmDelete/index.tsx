@@ -24,7 +24,6 @@ const FarmDeleteModal = ({ farmId }: FarmDeleteModalProps) => {
     let temp = Object.assign({}, farmListState);
     temp.currentPage = 0;
     temp.farmResponses = [];
-
     let data: FarmLoadListResponseType;
 
     if (temp.currentPage! < temp.totalPage + 1) {
@@ -39,6 +38,7 @@ const FarmDeleteModal = ({ farmId }: FarmDeleteModalProps) => {
             temp.farmResponses = [...temp.farmResponses, v];
         });
         if (
+          farmListState.farmResponses.length > 6 &&
           farmListState.farmResponses === temp.farmResponses &&
           temp.farmResponses.length !== 0
         )
