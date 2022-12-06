@@ -7,13 +7,17 @@ import {
   farmListStateAtom,
   farmListStateAtomType,
 } from "../../../atoms/farmListState";
-import { pxToRem } from "../../../utils/pxToRem";
+import {
+  searchStateAtom,
+  searchStateAtomType,
+} from "../../../atoms/searchState";
 import FarmCard from "../../farmCard";
 import LoadButton from "../../loadButton";
 
 const FarmMenu = () => {
   const [farmListState, setFarmListState] =
     useRecoilState<farmListStateAtomType>(farmListStateAtom);
+  const [searchState] = useRecoilState<searchStateAtomType>(searchStateAtom);
 
   const loadMore = async (isFirstRendered?: boolean) => {
     if (isFirstRendered && farmListState.currentPage! > 0) return;
@@ -51,21 +55,31 @@ const FarmMenu = () => {
   }, []);
 
   return (
-    <FarmWrapper>
+    <FarmWrapper
+      isLoadable={
+        farmListState.farmResponses.length / 6 < farmListState.totalPage &&
+        farmListState.totalPage > 0 &&
+        farmListState.currentPage !== farmListState.totalPage
+      }
+    >
       {farmListState.farmResponses &&
-        farmListState.farmResponses.map((v) => (
-          <FarmCard
-            key={v.id}
-            farmId={v.id}
-            farmName={v.farmName}
-            farmCrop={v.farmCrop}
-            createdDate={v.createdDate}
-            temperature={v.temperature}
-            airHumidity={v.airHumidity}
-            soilHumidity={v.soilHumidity}
-          />
-        ))}
-      {farmListState.farmResponses.length >= 6 &&
+        farmListState.farmResponses.map(
+          (v) =>
+            v.farmName.includes(searchState.searchQuery) && (
+              <FarmCard
+                key={v.id}
+                farmId={v.id}
+                farmName={v.farmName}
+                farmCrop={v.farmCrop}
+                createdDate={v.createdDate}
+                temperature={v.temperature}
+                airHumidity={v.airHumidity}
+                soilHumidity={v.soilHumidity}
+              />
+            )
+        )}
+      {Math.ceil(farmListState.farmResponses.length / 6) <
+        farmListState.totalPage &&
         farmListState.totalPage > 0 &&
         farmListState.currentPage !== farmListState.totalPage && (
           <LoadButton loadType="farm" loadMore={loadMore} />
@@ -76,19 +90,25 @@ const FarmMenu = () => {
 
 export default FarmMenu;
 
-const FarmWrapper = styled.div`
-  margin-bottom: ${pxToRem(25)}rem;
+interface FarmWrapperProps {
+  isLoadable: boolean;
+}
 
+const FarmWrapper = styled.div<FarmWrapperProps>`
   width: calc(100% + 5.75%);
+  height: max-content;
 
   display: flex;
   flex-wrap: wrap;
 
-  > div {
-    margin-right: 5%;
-
+  ${(props) =>
+    props.isLoadable
+      ? `> button {
     :last-of-type {
-      margin-right: 0;
-    }
-  }
+      margin-bottom: 0;
+    }}`
+      : `> a {
+    :last-of-type {
+      margin-bottom: 0;
+    }}`}
 `;

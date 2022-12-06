@@ -45,7 +45,11 @@ function PageFrame({ children }: PageFrameProps) {
       <Header />
       <Wrapper>
         <Title>
-          <h1 onClick={() => console.log(farmState)}>{userState.nickname}</h1>
+          <h1>
+            {location.pathname.includes("/farm")
+              ? farmState.farmName
+              : userState.nickname}
+          </h1>
           {location.pathname.includes("/farm") ? (
             <div>
               <span>{farmState.createdDate}</span>
@@ -122,7 +126,7 @@ const Wrapper = styled.div`
   margin-right: 20%;
 
   width: 60%;
-  height: auto;
+  height: 200%;
   min-height: 100vh;
 `;
 

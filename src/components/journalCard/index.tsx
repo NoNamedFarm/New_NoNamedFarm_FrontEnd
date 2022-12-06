@@ -40,6 +40,7 @@ const Background = styled(Link)`
   margin-bottom: ${pxToRem(25)}rem;
 
   width: 100%;
+  height: ${pxToRem(60)}rem;
 
   display: flex;
   justify-content: space-between;

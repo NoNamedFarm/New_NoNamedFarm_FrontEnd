@@ -28,12 +28,11 @@ const Background = styled.button<BackgroundProps>`
 
   width: ${(props) =>
     props.loadType === "farm" ? "calc(100% - 5.75%)" : "100%"};
+  height: ${pxToRem(60)}rem;
 
   display: flex;
   justify-content: center;
   align-items: center;
-
-  text-decoration: none;
 
   ${({ theme }) => theme.common.boxShadow}
 

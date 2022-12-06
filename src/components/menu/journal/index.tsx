@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { diaryLoadList } from "../../../apis/diary/loadList";
@@ -7,13 +7,17 @@ import {
   diaryListStateAtom,
   diaryListStateAtomType,
 } from "../../../atoms/diaryListState";
-import { pxToRem } from "../../../utils/pxToRem";
+import {
+  searchStateAtom,
+  searchStateAtomType,
+} from "../../../atoms/searchState";
 import JournalCard from "../../journalCard";
 import LoadButton from "../../loadButton";
 
 const JournalMenu = () => {
   const [diaryListState, setDiaryListState] =
     useRecoilState<diaryListStateAtomType>(diaryListStateAtom);
+  const [searchState] = useRecoilState<searchStateAtomType>(searchStateAtom);
 
   const loadMore = async (isFirstRendered?: boolean) => {
     if (isFirstRendered && diaryListState.currentPage! > 0) return;
@@ -51,12 +55,22 @@ const JournalMenu = () => {
   }, []);
 
   return (
-    <JournalWrapper key={diaryListState.totalPage}>
+    <JournalWrapper
+      isLoadable={
+        diaryListState.diaryResponses.length / 6 < diaryListState.totalPage &&
+        diaryListState.totalPage > 0 &&
+        diaryListState.currentPage !== diaryListState.totalPage
+      }
+    >
       {diaryListState.diaryResponses &&
-        diaryListState.diaryResponses.map((v) => (
-          <JournalCard key={v.id} journalId={v.id} date={v.date} />
-        ))}
-      {diaryListState.diaryResponses.length >= 6 &&
+        diaryListState.diaryResponses.map(
+          (v) =>
+            v.date.includes(searchState.searchQuery) && (
+              <JournalCard key={v.id} journalId={v.id} date={v.date} />
+            )
+        )}
+      {Math.ceil(diaryListState.diaryResponses.length / 6) <
+        diaryListState.totalPage &&
         diaryListState.totalPage > 0 &&
         diaryListState.currentPage !== diaryListState.totalPage && (
           <LoadButton loadType="journal" loadMore={() => loadMore(false)} />
@@ -67,20 +81,25 @@ const JournalMenu = () => {
 
 export default JournalMenu;
 
-const JournalWrapper = styled.div`
-  margin-bottom: ${pxToRem(25)}rem;
+interface JournalWrapperProps {
+  isLoadable: boolean;
+}
 
+const JournalWrapper = styled.div<JournalWrapperProps>`
   width: 100%;
-  height: ${pxToRem(48)}rem;
+  height: max-content;
 
   display: flex;
   flex-wrap: wrap;
 
-  > div {
-    margin-bottom: ${pxToRem(25)}rem;
-
+  ${(props) =>
+    props.isLoadable
+      ? `> button {
     :last-of-type {
       margin-bottom: 0;
-    }
-  }
+    }}`
+      : `> a {
+    :last-of-type {
+      margin-bottom: 0;
+    }}`}
 `;
