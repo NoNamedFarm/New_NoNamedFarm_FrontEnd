@@ -283,19 +283,19 @@ const InfoWrapper = styled.div`
 
     :nth-child(1) {
       > strong {
-        background-color: ${({ theme }) => theme.colors.green};
+        background-color: #9fe481;
       }
     }
 
     :nth-child(2) {
       > strong {
-        background-color: #7791ef;
+        background-color: #a5daf3;
       }
     }
 
     :nth-child(3) {
       > strong {
-        background-color: #e9cd6d;
+        background-color: #f6e785;
       }
     }
 
