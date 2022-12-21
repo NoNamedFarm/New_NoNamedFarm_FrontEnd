@@ -56,8 +56,8 @@ const Wrapper = styled.div`
     padding-left: ${pxToRem(25)}rem;
     padding-right: ${pxToRem(25)}rem;
 
-    width: ${pxToRem(548)}rem;
-    height: ${pxToRem(67)}rem;
+    width: ${pxToRem(345)}rem;
+    height: ${pxToRem(48)}rem;
 
     font-size: ${({ theme }) => theme.fontSizes.description};
 

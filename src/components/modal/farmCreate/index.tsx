@@ -199,11 +199,12 @@ export default FarmCreateModal;
 
 const Wrapper = styled.form`
   > div {
-    margin-top: ${pxToRem(30)}rem;
+    margin-top: ${pxToRem(25)}rem;
 
     :last-of-type {
-      margin-top: ${pxToRem(40)}rem;
-      width: ${pxToRem(548)}rem;
+      margin-top: ${pxToRem(25)}rem;
+
+      width: 100%;
 
       display: flex;
       justify-content: space-between;

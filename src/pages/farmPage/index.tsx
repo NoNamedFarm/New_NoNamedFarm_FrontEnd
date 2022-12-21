@@ -92,7 +92,7 @@ function FarmPage() {
           }}
         >
           <img src={Edit} alt="edit farm" />
-          농장 정보 수정
+          농장 수정
         </span>
         <span
           onClick={() => {

@@ -3,6 +3,7 @@ const fontSizes = {
   subTitle: "3.5rem",
   heading: "3rem",
   subHeading: "2.5rem",
+  modalTitle: "1.75rem",
   text: "2rem",
   subText: "1.4rem",
   description: "1rem",

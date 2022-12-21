@@ -71,7 +71,7 @@ const Wrapper = styled.div`
   border-radius: 1.5rem;
 
   > h1 {
-    font-size: ${({ theme }) => theme.fontSizes.subTitle};
+    font-size: ${({ theme }) => theme.fontSizes.modalTitle};
 
     ${({ theme }) => theme.common.gb};
   }

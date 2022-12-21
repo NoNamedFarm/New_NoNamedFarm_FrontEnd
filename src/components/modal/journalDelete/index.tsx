@@ -53,6 +53,9 @@ const JournalDeleteModal = ({ journalId }: JournalDeleteModalProps) => {
   const onSubmit = async () => {
     const response = await diaryDelete({ id: journalId });
     if (response === true) {
+      if (window.location.pathname !== "/menu")
+        window.location.replace("/menu?contents=journal");
+
       refreshList();
       setModalState({ title: "", modalContents: null });
     } else {
@@ -87,16 +90,15 @@ export default JournalDeleteModal;
 
 const Wrapper = styled.form`
   > h2 {
-    font-size: ${({ theme }) => theme.fontSizes.text};
+    font-size: ${({ theme }) => theme.fontSizes.modalTitle};
     text-align: center;
   }
 
   > div {
-    margin-top: ${pxToRem(30)}rem;
-
     :last-of-type {
-      margin-top: ${pxToRem(40)}rem;
-      width: ${pxToRem(548)}rem;
+      margin-top: ${pxToRem(25)}rem;
+
+      width: 100%;
 
       display: flex;
       justify-content: space-between;

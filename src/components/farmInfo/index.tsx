@@ -26,7 +26,7 @@ const FarmInfo = ({
         type="soilHumidity"
         min={0}
         max={100}
-        value={soilHumidity}
+        value={soilHumidity && 100 - soilHumidity}
       />
       <Gauge
         label="대기 습도 (%)"

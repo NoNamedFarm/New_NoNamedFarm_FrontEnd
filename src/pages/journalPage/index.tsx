@@ -101,6 +101,7 @@ function JournalPage() {
       if (params !== "write") {
         const response = await diaryUpdate(inputState);
         if (response === true) {
+          refreshList();
           setEditState(false);
         } else {
           if (response === 400) {
@@ -193,7 +194,7 @@ function JournalPage() {
                 }}
               />
             ) : (
-              <h1>{diaryState.date}</h1>
+              <h1>{inputState.date}</h1>
             )}
           </span>
         </Head>
