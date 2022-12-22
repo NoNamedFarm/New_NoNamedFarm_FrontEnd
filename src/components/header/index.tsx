@@ -5,8 +5,12 @@ import { pxToRem } from "../../utils/pxToRem";
 import { useEffect, useState } from "react";
 import * as C from "../../utils/cookie";
 import { userLogout } from "../../apis/user/logout";
+import { useRecoilState } from "recoil";
+import { userStateAtom, userStateAtomType } from "../../atoms/userState";
 
 const Header = () => {
+  const [, setUserState] = useRecoilState<userStateAtomType>(userStateAtom);
+
   const [hideHeaderState, setHideHeaderState] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -38,6 +42,12 @@ const Header = () => {
           <button
             onClick={() => {
               userLogout();
+              setUserState({
+                nickname: "",
+                createDate: 0,
+                totalFarm: 0,
+                totalDiary: 0,
+              });
               navigate("/");
             }}
           >
