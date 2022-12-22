@@ -5,6 +5,14 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userLoad } from "../../apis/user/load";
 import { Return } from "../../assets/images";
+import {
+  diaryListStateAtom,
+  diaryListStateAtomType,
+} from "../../atoms/diaryListState";
+import {
+  farmListStateAtom,
+  farmListStateAtomType,
+} from "../../atoms/farmListState";
 import { farmStateAtom, farmStateAtomType } from "../../atoms/farmState";
 import { userStateAtom, userStateAtomType } from "../../atoms/userState";
 import Header from "../../components/header";
@@ -19,6 +27,10 @@ function PageFrame({ children }: PageFrameProps) {
   const [userState, setUserState] =
     useRecoilState<userStateAtomType>(userStateAtom);
   const [farmState] = useRecoilState<farmStateAtomType>(farmStateAtom);
+  const [farmListState] =
+    useRecoilState<farmListStateAtomType>(farmListStateAtom);
+  const [diaryListState] =
+    useRecoilState<diaryListStateAtomType>(diaryListStateAtom);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const contents = searchParams.get("contents");
@@ -28,17 +40,15 @@ function PageFrame({ children }: PageFrameProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userState.nickname === "") {
-      const fetchData = async () => setUserState(await userLoad());
-      fetchData();
-    }
+    const fetchData = async () => setUserState(await userLoad());
+    fetchData();
 
     if (!getCookie("accessToken")) {
       navigate("/");
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id]);
+  }, [params.id, farmListState, diaryListState]);
 
   return (
     <>
