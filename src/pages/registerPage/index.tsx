@@ -82,7 +82,7 @@ function RegisterPage() {
       return false;
     } else temp.userId = "";
 
-    if (temp.nickname.length > 4) {
+    if (temp.nickname.length > 8) {
       temp.nickname = "닉네임 형식이 올바르지 않습니다.";
       setWarning(temp);
       return false;

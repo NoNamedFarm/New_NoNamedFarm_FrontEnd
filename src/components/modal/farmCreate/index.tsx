@@ -121,7 +121,7 @@ const FarmCreateModal = () => {
         if (response === 404) {
           let temp = Object.assign({}, warning);
           temp = {
-            deviceId: "해당하는 농장 아이디가 존재하지 않습니다.",
+            deviceId: "농장 아이디가 존재하지 않습니다.",
             farmName: "",
             farmCrop: "",
           };
@@ -130,7 +130,7 @@ const FarmCreateModal = () => {
         if (response === 409) {
           let temp = Object.assign({}, warning);
           temp = {
-            deviceId: "이미 해당 농장의 주인이 존재합니다.",
+            deviceId: "해당 농장의 주인이 존재합니다.",
             farmName: "",
             farmCrop: "",
           };

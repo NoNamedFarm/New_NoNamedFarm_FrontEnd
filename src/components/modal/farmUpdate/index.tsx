@@ -45,13 +45,13 @@ const FarmUpdateModal = () => {
     } else temp.farmCrop = "";
 
     if (inputState.farmName.length > 5) {
-      temp.farmName = "농장 이름 형식이 올바르지 않습니다.";
+      temp.farmName = "농장 이름 길이가 너무 깁니다.";
       setWarning(temp);
       return false;
     } else temp.farmName = "";
 
     if (inputState.farmCrop.length > 15) {
-      temp.farmCrop = "기르는 작물 형식이 올바르지 않습니다.";
+      temp.farmCrop = "기르는 작물 길이가 너무 깁니다.";
       setWarning(temp);
       return false;
     } else temp.farmCrop = "";
