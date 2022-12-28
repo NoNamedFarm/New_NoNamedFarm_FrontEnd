@@ -50,7 +50,7 @@ const FarmCard = ({
       </Wrapper>
       <Wrapper>
         <ul>
-          <li>토양 습도 : {Math.round((soilHumidity / 4095) * 100)}%</li>
+          <li>토양 습도 : {100 - Math.round((soilHumidity / 4095) * 100)}%</li>
           <li>온도 : {temperature}°C</li>
           <li>공기 습도 : {Math.round(airHumidity)}%</li>
         </ul>
